@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">RecipeExJobb</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign Up</string>
 </resources>
