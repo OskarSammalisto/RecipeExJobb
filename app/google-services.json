@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "202372693056",
+    "firebase_url": "https://recipeexjobb.firebaseio.com",
+    "project_id": "recipeexjobb",
+    "storage_bucket": "recipeexjobb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:202372693056:android:81d02a6b8ef847a97573a5",
+        "android_client_info": {
+          "package_name": "com.example.recipeexjobb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "202372693056-lca8ani16kk2lp3c1mujpj00f5opvbf7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.recipeexjobb",
+            "certificate_hash": "39c5dd9145633ab24160a93124b92c60289f2984"
+          }
+        },
+        {
+          "client_id": "202372693056-9vppplrio4vr3vnj8j3vfcssm40a9mrk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjWlzE59VFlNgTxJKoRgd4TZTBgMIbNj0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "202372693056-9vppplrio4vr3vnj8j3vfcssm40a9mrk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
