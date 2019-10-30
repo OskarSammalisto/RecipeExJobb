@@ -12,7 +12,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,6 +28,10 @@ public class MainActivity extends AppCompatActivity {
     //Adapter for fragment pager adapter
     FragmentPagerAdapter adapterViewPager;
 
+    //button variables
+    private ImageButton addRecipeButton;
+    private ImageButton menuButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +40,27 @@ public class MainActivity extends AppCompatActivity {
 
         //instantiates fireBase auth
         mAuth = FirebaseAuth.getInstance();
+
+        //instantiate button variables
+        addRecipeButton = findViewById(R.id.addRecipeButton);
+        menuButton = findViewById(R.id.menuButton);
+
+
+        //On click listener for add recipe button
+        addRecipeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "this would open the new recipe fragment", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //on click listener for menu button
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "this would open the side menu", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
 
@@ -44,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        //Try to set pager adapter
+        //Sets pager adapter
         ViewPager viewPager = findViewById(R.id.viewPager);
         adapterViewPager = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapterViewPager);
