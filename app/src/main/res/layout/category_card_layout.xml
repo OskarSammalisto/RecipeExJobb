@@ -26,7 +26,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:src="@drawable/knightSprite"
+                android:src="@drawable/knight_sprite"
                 android:layout_height="match_parent">
             </ImageView>
 

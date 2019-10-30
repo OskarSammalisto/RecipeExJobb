@@ -3,11 +3,11 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/categoryLabel"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recipeRecycleView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    </TextView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>
