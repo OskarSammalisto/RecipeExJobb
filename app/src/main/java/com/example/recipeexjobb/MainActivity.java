@@ -21,6 +21,9 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -34,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton addRecipeButton;
     private ImageButton menuButton;
 
+    //Main Recipe List
+    private List<Recipe> recipeList;
+
+
 
 
     @Override
@@ -43,6 +50,11 @@ public class MainActivity extends AppCompatActivity {
 
         //instantiates fireBase auth
         mAuth = FirebaseAuth.getInstance();
+
+        //instantiate recipe list if null
+        if(recipeList == null){
+            recipeList = new ArrayList<>();
+        }
 
         //instantiate button variables
         addRecipeButton = findViewById(R.id.addRecipeButton);
@@ -58,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
                 ft.replace(R.id.frameLayoutForRecipes, new AddRecipeFragment());
                 ft.commit();
 
-
-               // Toast.makeText(MainActivity.this, "this would open the new recipe fragment", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -86,6 +96,18 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapterViewPager);
 
 
+    }
+
+
+    //Create a new recipe and add to Recipe List
+    public void createRecipe(String title, String description, String ingredients, String instructions){
+        Recipe recipe = new Recipe(R.drawable.knight_sprite, title, description, ingredients, instructions);
+        recipeList.add(recipe);
+        Toast.makeText(MainActivity.this, "Recipe added to collection.", Toast.LENGTH_SHORT).show();
+    }
+
+    public List<Recipe> getRecipeList(){
+        return recipeList;
     }
 
     private void intentLoginScreen(){

@@ -52,9 +52,6 @@
         android:id="@+id/frameLayoutForRecipes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="40dp"></FrameLayout>
+        ></FrameLayout>
 
 </RelativeLayout>

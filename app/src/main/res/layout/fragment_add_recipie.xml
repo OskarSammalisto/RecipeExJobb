@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/round_keyboard_backspace_black_18dp"
         android:background="@null"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"></ImageButton>
 
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/round_done_black_18dp"
         android:background="@null"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"></ImageButton>
 
@@ -34,10 +34,28 @@
         android:layout_marginTop="100dp"></ImageView>
 
     <EditText
-        android:id="@+id/addRecipeIngredients"
+        android:id="@+id/addRecipeTitle"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/addRecipeImage"
+        android:layout_marginTop="30dp"
+        android:text="click to add title"
+        android:layout_centerHorizontal="true"></EditText>
+
+    <EditText
+        android:id="@+id/addRecipeDescription"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addRecipeTitle"
+        android:layout_marginTop="30dp"
+        android:text="click to add description"
+        android:layout_centerHorizontal="true"></EditText>
+
+    <EditText
+        android:id="@+id/addRecipeIngredients"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addRecipeDescription"
         android:layout_marginTop="30dp"
         android:text="click to att ingredients"
         android:layout_centerHorizontal="true"></EditText>
