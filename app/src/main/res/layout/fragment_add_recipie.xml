@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark">
+
+    <ImageButton
+        android:id="@+id/exitAddRecipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/round_keyboard_backspace_black_18dp"
+        android:background="@null"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"></ImageButton>
+
+    <ImageButton
+        android:id="@+id/saveRecipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/round_done_black_18dp"
+        android:background="@null"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"></ImageButton>
+
+
+    <ImageView
+        android:id="@+id/addRecipeImage"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/knight_sprite"
+        android:layout_marginTop="100dp"></ImageView>
+
+    <EditText
+        android:id="@+id/addRecipeIngredients"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addRecipeImage"
+        android:layout_marginTop="30dp"
+        android:text="click to att ingredients"
+        android:layout_centerHorizontal="true"></EditText>
+
+    <EditText
+        android:id="@+id/addRecipeInstructions"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addRecipeIngredients"
+        android:layout_marginTop="30dp"
+        android:text="click to add instructions"
+        android:layout_centerHorizontal="true"></EditText>
+
+</RelativeLayout>
