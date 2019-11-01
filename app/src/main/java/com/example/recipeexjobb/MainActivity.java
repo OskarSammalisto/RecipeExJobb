@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        //Sets pager adapter
+        //Sets pager adapter to main activity view pager
         ViewPager viewPager = findViewById(R.id.viewPager);
         adapterViewPager = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapterViewPager);
@@ -103,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
     public void createRecipe(String title, String description, String ingredients, String instructions){
         Recipe recipe = new Recipe(R.drawable.knight_sprite, title, description, ingredients, instructions);
         recipeList.add(recipe);
+
+
         Toast.makeText(MainActivity.this, "Recipe added to collection.", Toast.LENGTH_SHORT).show();
     }
 
@@ -126,10 +128,12 @@ public class MainActivity extends AppCompatActivity {
     public static class PagerAdapter extends FragmentPagerAdapter {
             private static int NUM_ITEMS = 3;
 
+
         public PagerAdapter(FragmentManager fragmentManager){
             super(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
         }
+
 
         @Override
         public int getCount() {

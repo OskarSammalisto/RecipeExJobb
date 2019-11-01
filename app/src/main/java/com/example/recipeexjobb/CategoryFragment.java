@@ -49,8 +49,7 @@ public class CategoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-       // recipeList = new ArrayList<>();
-
+        //gets the recipe list from main activity
         recipeList = ((MainActivity) getActivity()).getRecipeList();
 
         View view = inflater.inflate(R.layout.fragment_category, container, false);
@@ -59,16 +58,9 @@ public class CategoryFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-//        recipeList.add(new Recipe(R.drawable.knight_sprite, "Recipe one", "The Description of the recipe.", "ingr", "instr"));
-//        recipeList.add(new Recipe(R.drawable.knight_sprite, "Recipe two", "The Description of the recipe.", "ingr", "instr"));
-//        recipeList.add(new Recipe(R.drawable.knight_sprite, "Recipe three", "The Description of the recipe.", "ingr", "instr"));
-//        recipeList.add(new Recipe(R.drawable.knight_sprite, "Recipe four", "The Description of the recipe.", "ingr", "instr"));
-
         recipeListAdapter = new RecipeListAdapter(view.getContext(), recipeList);
         recyclerView.setAdapter(recipeListAdapter);
 
-       // TextView categoryLabel = view.findViewById(R.id.categoryLabel);
-        //categoryLabel.setText(category);
         return view;
     }
 }

@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import static androidx.viewpager.widget.PagerAdapter.POSITION_NONE;
+
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.MyViewHolder> {
     private List<Recipe> recipeList;
     private Context context;
