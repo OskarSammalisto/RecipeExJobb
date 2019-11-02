@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -24,10 +26,19 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions;
+import com.google.firebase.ml.vision.text.FirebaseVisionText;
+import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
@@ -45,6 +56,9 @@ public class AddRecipeFragment extends Fragment {
     private EditText recipeDescription;
     private EditText recipeIngredients;
     private EditText recipeInstructions;
+
+    //Current text Box that shall receive text from image to text api
+    EditText imageToTextEditText;
 
     //image view for recipe image
     ImageView imView;
@@ -129,6 +143,7 @@ public class AddRecipeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //open camera and do stuff with image
+                imageToTextEditText = recipeIngredients;
                 dispatchTakePictureIntent();
             }
         });
@@ -138,6 +153,8 @@ public class AddRecipeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                imageToTextEditText = recipeInstructions;
+                dispatchTakePictureIntent();
                 //open camera and do stuff with image
             }
         });
@@ -193,8 +210,10 @@ public class AddRecipeFragment extends Fragment {
             //TODO: send picture to cloud instead of setting it as thumbnail.
 
 
+
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                readTextInImage(bitmap);
                 imView.setImageBitmap(bitmap);
 
             } catch (FileNotFoundException e) {
@@ -227,6 +246,55 @@ public class AddRecipeFragment extends Fragment {
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
+
+    //reads the text in the image and
+    private void readTextInImage(Bitmap bitmapImage){
+
+        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmapImage);
+
+
+        //text recognizer for the on device api
+        FirebaseVisionTextRecognizer textRecognizer = FirebaseVision.getInstance()
+                .getOnDeviceTextRecognizer();
+
+        //text recognizer for the cloud based api
+//        FirebaseVisionTextRecognizer textRecognizer = FirebaseVision.getInstance()
+//                .getCloudTextRecognizer();
+//
+
+        //
+        textRecognizer.processImage(image)
+                .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
+                    @Override
+                    public void onSuccess(FirebaseVisionText result) {
+                        Log.d("image processing", "success");
+
+                        //set returned text as text in text box
+                        String resultText = result.getText();
+                        imageToTextEditText.setText(resultText);
+
+
+                        // Task completed successfully
+                        // ...
+                    }
+                })
+                .addOnFailureListener(
+                        new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("image processing", "failed: " + e );
+                                // Task failed with an exception
+                                // ...
+                            }
+                        });
+
+
+
+    }
+
+
+
 
 
 
