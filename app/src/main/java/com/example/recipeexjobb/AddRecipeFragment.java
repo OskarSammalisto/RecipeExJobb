@@ -1,7 +1,9 @@
 package com.example.recipeexjobb;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,20 +54,22 @@ public class AddRecipeFragment extends Fragment {
     private ImageButton ingredientsFromImage;
     private ImageButton instructionsFromImage;
 
-    //Edit text variables
-    private EditText recipeTitle;
-    private EditText recipeDescription;
-    private EditText recipeIngredients;
-    private EditText recipeInstructions;
+    //text View variables
+    private TextView recipeTitle;
+    private TextView recipeDescription;
+    private TextView recipeIngredients;
+    private TextView recipeInstructions;
 
-    //Current text Box that shall receive text from image to text api
-    EditText imageToTextEditText;
+
+
+    //Current text Box that shall receive text from image to text api or from edit text
+    private TextView imageToTextEditText;
 
     //image view for recipe image
-    ImageView imView;
+    private ImageView imView;
 
     //File to save photo taken with camera
-    File photoFile;
+    private File photoFile;
 
     //Constant used for the camera intent
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -75,7 +80,6 @@ public class AddRecipeFragment extends Fragment {
     //String to create photo path for new photos
     private String currentPhotoPath;
 
-    Context context;
 
 
     @Override
@@ -89,13 +93,12 @@ public class AddRecipeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
-        context = container.getContext();
         View view = inflater.inflate(R.layout.fragment_add_recipie, container, false);
 
         //instantiate recipe image variable
         imView = view.findViewById(R.id.addRecipeImage);
 
-        //instantiate button variables and edit text
+        //instantiate button variables, text views and edit text
         saveRecipeButton = view.findViewById(R.id.saveRecipe);
         cancelButton = view.findViewById(R.id.exitAddRecipe);
         ingredientsFromImage = view.findViewById(R.id.cameraAddIngredients);
@@ -105,6 +108,7 @@ public class AddRecipeFragment extends Fragment {
         recipeDescription = view.findViewById(R.id.addRecipeDescription);
         recipeIngredients = view.findViewById(R.id.addRecipeIngredients);
         recipeInstructions = view.findViewById(R.id.addRecipeInstructions);
+
 
 
         //Button to cancel adding a new recipe
@@ -137,6 +141,47 @@ public class AddRecipeFragment extends Fragment {
             }
         });
 
+
+        //Click listeners to edit text in text views
+
+        //Title View
+        recipeTitle.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+                setViewText(recipeTitle);
+
+            }
+        });
+
+        //Description View
+        recipeDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setViewText(recipeDescription);
+            }
+        });
+
+        //Ingredients view
+        recipeIngredients.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setViewText(recipeIngredients);
+            }
+        });
+
+        //Instructions View
+        recipeInstructions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setViewText(recipeInstructions);
+            }
+        });
+
+
+
+
         //Button to read ingredients from an image taken with the camera
         ingredientsFromImage.setOnClickListener(new View.OnClickListener() {
 
@@ -165,6 +210,43 @@ public class AddRecipeFragment extends Fragment {
 
     private void closeFragment(){
         getFragmentManager().beginTransaction().remove(AddRecipeFragment.this).commit();
+    }
+
+
+    //Open alert dialog to edit text in text views
+
+    public void setViewText(final TextView textView){
+
+        AlertDialog.Builder editTextPopup = new AlertDialog.Builder(getContext());
+
+        editTextPopup.setTitle("Recipe Title");
+
+        final EditText titleInput = new EditText(getContext());
+        titleInput.setText(textView.getText());
+        editTextPopup.setView(titleInput);
+
+        editTextPopup.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                textView.setText(titleInput.getText());
+
+            }
+        });
+
+        editTextPopup.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        editTextPopup.show();
+
+
+
+
+
+
     }
 
 
@@ -207,14 +289,10 @@ public class AddRecipeFragment extends Fragment {
             Uri uri = Uri.fromFile(photoFile);
             Bitmap bitmap;
 
-            //TODO: send picture to cloud instead of setting it as thumbnail.
-
-
 
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                 readTextInImage(bitmap);
-                imView.setImageBitmap(bitmap);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -272,7 +350,7 @@ public class AddRecipeFragment extends Fragment {
 
                         //set returned text as text in text box
                         String resultText = result.getText();
-                        imageToTextEditText.setText(resultText);
+                        imageToTextEditText.append(resultText);
 
 
                         // Task completed successfully

@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/colorPrimaryDark">
+
+<RelativeLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/colorPrimaryDark">
 
     <ImageButton
@@ -33,7 +40,7 @@
         android:src="@drawable/knight_sprite"
         android:layout_marginTop="100dp" />
 
-    <EditText
+    <TextView
         android:id="@+id/addRecipeTitle"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -43,7 +50,7 @@
         android:layout_centerHorizontal="true" />
 
 
-    <EditText
+    <TextView
         android:id="@+id/addRecipeDescription"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -53,7 +60,7 @@
         android:layout_centerHorizontal="true" />
 
 
-    <EditText
+    <TextView
         android:id="@+id/addRecipeIngredients"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -73,7 +80,7 @@
         android:src="@drawable/round_photo_camera_black_18dp"
         android:background="@null" />
 
-    <EditText
+    <TextView
         android:id="@+id/addRecipeInstructions"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -93,4 +100,7 @@
         android:src="@drawable/round_photo_camera_black_18dp"
         android:background="@null" />
 
+
+
 </RelativeLayout>
+</ScrollView>
