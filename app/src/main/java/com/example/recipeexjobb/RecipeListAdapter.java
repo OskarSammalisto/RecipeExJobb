@@ -8,21 +8,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import static androidx.viewpager.widget.PagerAdapter.POSITION_NONE;
 
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.MyViewHolder> {
     private List<Recipe> recipeList;
     private Context context;
 
 
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-//        public CardView cardView;
+        //        public CardView cardView;
         ImageView recipeImage;
         TextView recipeTitle, recipeDescription;
         public MyViewHolder(View view){
@@ -34,6 +33,8 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
 
         }
     }
+
+
 
     public RecipeListAdapter(Context context, List<Recipe> recipes){
 

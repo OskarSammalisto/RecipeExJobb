@@ -69,12 +69,20 @@
         android:text="click to add description"
         android:layout_centerHorizontal="true" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/addItemRecycleView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addRecipeDescription">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
 
     <TextView
         android:id="@+id/addRecipeIngredients"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/addRecipeDescription"
+        android:layout_below="@id/addItemRecycleView"
         android:layout_marginTop="30dp"
         android:text="click to add ingredients"
         android:layout_centerHorizontal="true" />
@@ -84,7 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toStartOf="@id/addRecipeIngredients"
-        android:layout_below="@id/addRecipeDescription"
+        android:layout_below="@id/addItemRecycleView"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
         android:src="@drawable/round_photo_camera_black_18dp"
@@ -110,15 +118,6 @@
         android:src="@drawable/round_photo_camera_black_18dp"
         android:background="@null" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/addRecipeTags"-->
-<!--        android:layout_width="250dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@id/addRecipeInstructions"-->
-<!--        android:layout_marginTop="30dp"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:text="click to add tags">-->
-<!--    </TextView>-->
 
 </RelativeLayout>
 </ScrollView>

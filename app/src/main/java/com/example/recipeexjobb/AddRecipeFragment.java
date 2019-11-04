@@ -31,6 +31,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,8 +46,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -68,7 +72,15 @@ public class AddRecipeFragment extends Fragment {
     private TextView recipeDescription;
     private TextView recipeIngredients;
     private TextView recipeInstructions;
-    //private TextView recipeAddTags;
+
+    //ArrayList for ingredients in new recipe
+    List<IngredientItem> ingredientsList = new ArrayList<>();
+
+
+    //recipe list adapter and recycle view to hold ingredients list
+    private AddIngredientAdapter addIngredientAdapter;
+    private RecyclerView recyclerView;
+    private int numberOfIngredients = 1;
 
 
 
@@ -134,7 +146,6 @@ public class AddRecipeFragment extends Fragment {
         recipeDescription = view.findViewById(R.id.addRecipeDescription);
         recipeIngredients = view.findViewById(R.id.addRecipeIngredients);
         recipeInstructions = view.findViewById(R.id.addRecipeInstructions);
-        //recipeAddTags = view.findViewById(R.id.addRecipeTags);
 
 
 
@@ -234,15 +245,6 @@ public class AddRecipeFragment extends Fragment {
             }
         });
 
-//        //Add Tags View
-//        recipeAddTags.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-
-
 
 
         //Button to read ingredients from an image taken with the camera
@@ -281,6 +283,13 @@ public class AddRecipeFragment extends Fragment {
             }
         });
 
+        //set recycler view adapter for ingredients list
+        //View ingredientsView = inflater.inflate(R.layout.)
+        recyclerView = view.findViewById(R.id.addItemRecycleView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        addIngredientAdapter = new AddIngredientAdapter(view.getContext(), numberOfIngredients );
+        recyclerView.setAdapter(addIngredientAdapter);
 
         return view;
     }

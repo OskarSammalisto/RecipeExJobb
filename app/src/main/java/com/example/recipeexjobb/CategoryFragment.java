@@ -1,9 +1,13 @@
 package com.example.recipeexjobb;
 
+import android.app.SearchManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -22,6 +26,7 @@ public class CategoryFragment extends Fragment {
     private RecipeListAdapter recipeListAdapter;
 
     List<Recipe> recipeList;
+    List<Recipe> categorizedList;
 
     public CategoryFragment(){
         //empty public constructor
@@ -53,13 +58,15 @@ public class CategoryFragment extends Fragment {
         recipeList = ((MainActivity) getActivity()).getRecipeList();
 
 
+
+
         View view = inflater.inflate(R.layout.fragment_category, container, false);
         recyclerView = view.findViewById(R.id.recipeRecycleView);
         recyclerView.setHasFixedSize(true);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        List<Recipe> categorizedList = new ArrayList<>();
+        categorizedList = new ArrayList<>();
 
 
         //makes a list for the weeks recipes
@@ -88,4 +95,5 @@ public class CategoryFragment extends Fragment {
 
         return view;
     }
+
 }

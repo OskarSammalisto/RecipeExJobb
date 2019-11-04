@@ -17,6 +17,18 @@
         android:background="@null">
     </ImageButton>
 
+    <SearchView
+        android:id="@+id/searchRecipes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_toEndOf="@id/menuButton"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginTop="15dp"
+        android:layout_alignEnd="@id/addRecipeButton">
+    </SearchView>
+
     <ImageButton
         android:id="@+id/menuButton"
         android:layout_width="wrap_content"
