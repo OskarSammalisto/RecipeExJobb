@@ -52,13 +52,38 @@ public class CategoryFragment extends Fragment {
         //gets the recipe list from main activity
         recipeList = ((MainActivity) getActivity()).getRecipeList();
 
+
         View view = inflater.inflate(R.layout.fragment_category, container, false);
         recyclerView = view.findViewById(R.id.recipeRecycleView);
         recyclerView.setHasFixedSize(true);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        recipeListAdapter = new RecipeListAdapter(view.getContext(), recipeList);
+        List<Recipe> categorizedList = new ArrayList<>();
+
+
+        //makes a list for the weeks recipes
+        if(page == 6){
+            for(Recipe recipe : recipeList){
+                if(recipe.isOnWeeksMenu()){
+                    categorizedList.add(recipe);
+                }
+            }
+        }
+
+        else if(page == 7){
+            categorizedList = recipeList;
+        }
+
+        //makes a list of recipes fitting the category
+        for(Recipe recipe : recipeList){
+            if(recipe.getRecipeCategory() == page){
+                categorizedList.add(recipe);
+            }
+        }
+
+
+        recipeListAdapter = new RecipeListAdapter(view.getContext(), categorizedList);
         recyclerView.setAdapter(recipeListAdapter);
 
         return view;

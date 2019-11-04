@@ -1,4 +1,26 @@
 <resources>
+    <string-array name="categoryList">
+        <item>Please Select a Category…</item>
+        <item>Meat</item>
+        <item>Fish</item>
+        <item>Vegetarian</item>
+        <item>Dessert</item>
+        <item>Drink</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="menuTitleCategoryList">
+        <item>Meat</item>
+        <item>Fish</item>
+        <item>Vegetarian</item>
+        <item>Dessert</item>
+        <item>Drink</item>
+        <item>Other</item>
+        <item>Weeks Menu</item>
+        <item>All Recipes</item>
+    </string-array>
+
+
     <string name="app_name">RecipeExJobb</string>
     <string name="email">email</string>
     <string name="password">password</string>

@@ -49,12 +49,22 @@
         android:text="click to add title"
         android:layout_centerHorizontal="true" />
 
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/categorySpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/addRecipeTitle"
+        android:layout_marginTop="30dp">
+
+    </androidx.appcompat.widget.AppCompatSpinner>
+
 
     <TextView
         android:id="@+id/addRecipeDescription"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/addRecipeTitle"
+        android:layout_below="@id/categorySpinner"
         android:layout_marginTop="30dp"
         android:text="click to add description"
         android:layout_centerHorizontal="true" />
@@ -66,7 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/addRecipeDescription"
         android:layout_marginTop="30dp"
-        android:text="click to att ingredients"
+        android:text="click to add ingredients"
         android:layout_centerHorizontal="true" />
 
     <ImageButton
@@ -100,7 +110,15 @@
         android:src="@drawable/round_photo_camera_black_18dp"
         android:background="@null" />
 
-
+<!--    <TextView-->
+<!--        android:id="@+id/addRecipeTags"-->
+<!--        android:layout_width="250dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@id/addRecipeInstructions"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:text="click to add tags">-->
+<!--    </TextView>-->
 
 </RelativeLayout>
 </ScrollView>

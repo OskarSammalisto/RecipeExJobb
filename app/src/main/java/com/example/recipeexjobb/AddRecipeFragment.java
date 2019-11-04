@@ -16,10 +16,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -65,6 +68,7 @@ public class AddRecipeFragment extends Fragment {
     private TextView recipeDescription;
     private TextView recipeIngredients;
     private TextView recipeInstructions;
+    //private TextView recipeAddTags;
 
 
 
@@ -90,6 +94,9 @@ public class AddRecipeFragment extends Fragment {
     //booleans for identifying first change in text views, so that sample text is removed.
     private boolean titleChanged, descriptionChanged, ingredientsChanged, instructionsChanged  = false;
 
+    //Spinner for selecting recipe category
+    private Spinner categorySpinner;
+
 
 
     @Override
@@ -105,6 +112,15 @@ public class AddRecipeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_add_recipie, container, false);
 
+
+        //init spinner and set categories
+        categorySpinner = view.findViewById(R.id.categorySpinner);
+        fillCategorySpinner();
+
+
+
+
+
         //instantiate recipe image variable
         imView = view.findViewById(R.id.addRecipeImage);
 
@@ -118,6 +134,7 @@ public class AddRecipeFragment extends Fragment {
         recipeDescription = view.findViewById(R.id.addRecipeDescription);
         recipeIngredients = view.findViewById(R.id.addRecipeIngredients);
         recipeInstructions = view.findViewById(R.id.addRecipeInstructions);
+        //recipeAddTags = view.findViewById(R.id.addRecipeTags);
 
 
 
@@ -143,9 +160,12 @@ public class AddRecipeFragment extends Fragment {
                 String ingredients = recipeIngredients.getText().toString();
                 String instructions = recipeInstructions.getText().toString();
 
+                int category = categorySpinner.getSelectedItemPosition() -1;
 
 
-                ((MainActivity) getActivity()).createRecipe(title, description, ingredients, instructions);
+
+                ((MainActivity) getActivity()).createRecipe(title, description, ingredients, instructions, category);
+
 
                 closeFragment();
             }
@@ -214,6 +234,14 @@ public class AddRecipeFragment extends Fragment {
             }
         });
 
+//        //Add Tags View
+//        recipeAddTags.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+
 
 
 
@@ -260,6 +288,16 @@ public class AddRecipeFragment extends Fragment {
 
     private void closeFragment(){
         getFragmentManager().beginTransaction().remove(AddRecipeFragment.this).commit();
+    }
+
+
+    //initialize and populate category spinner
+    private void fillCategorySpinner(){
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource
+                (getContext(), R.array.categoryList, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(adapter);
+
     }
 
 

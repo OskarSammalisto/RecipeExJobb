@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Sets pager adapter to main activity view pager
         ViewPager viewPager = findViewById(R.id.viewPager);
-        adapterViewPager = new PagerAdapter(getSupportFragmentManager());
+        adapterViewPager = new PagerAdapter(getSupportFragmentManager(), this);
         viewPager.setAdapter(adapterViewPager);
 
 
@@ -100,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Create a new recipe and add to Recipe List
-    public void createRecipe(String title, String description, String ingredients, String instructions){
-        Recipe recipe = new Recipe(R.drawable.knight_sprite, title, description, ingredients, instructions);
+    public void createRecipe(String title, String description, String ingredients, String instructions, int category){
+        Recipe recipe = new Recipe(R.drawable.knight_sprite, title, description, ingredients, instructions, category);
         recipeList.add(recipe);
 
 
@@ -124,14 +125,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     //pager adapter class
     public static class PagerAdapter extends FragmentPagerAdapter {
-            private static int NUM_ITEMS = 3;
+            private static int NUM_ITEMS = 8;
+            private Context context;
+            private static String[] categoryArray;
 
 
-        public PagerAdapter(FragmentManager fragmentManager){
+
+        public PagerAdapter(FragmentManager fragmentManager, Context nContext){
             super(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-
+            context = nContext;
+            categoryArray = context.getResources().getStringArray(R.array.menuTitleCategoryList);
         }
 
 
@@ -143,14 +149,27 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
+
             switch (position) {
                 case 0:
-                    return CategoryFragment.newInstance(0, "page # 1");
+                    return CategoryFragment.newInstance(0, "Meat");
                 case 1:
-                    return CategoryFragment.newInstance(1, "page # 2");
+                    return CategoryFragment.newInstance(1, "Fish");
                 case 2:
-                    return CategoryFragment.newInstance(2, "page # 3");
-                    default:
+                    return CategoryFragment.newInstance(2, "Vegetarian");
+                case 3:
+                    return CategoryFragment.newInstance(3, "Dessert");
+                case 4:
+                    return CategoryFragment.newInstance(4, "Drink");
+                case 5:
+                    return CategoryFragment.newInstance(5, "Other");
+                case 6:
+                    return CategoryFragment.newInstance(6, "Weeks menu");
+                case 7:
+                    return CategoryFragment.newInstance(7, "All Recipes");
+
+
+                default:
                         return null;
             }
 
@@ -158,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "page " + position;
+            return categoryArray[position];
         }
     }
 
