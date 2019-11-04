@@ -36,11 +36,13 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/recipeImage"
                 android:layout_marginTop="40dp"
-                android:layout_marginStart="50dp"
+                android:layout_marginStart="20dp"
                 android:text="Recipe Title"
                 android:textSize="22sp"
                 android:textAllCaps="true"
-                android:textStyle="bold">
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end">
             </TextView>
 
             <TextView
@@ -51,8 +53,9 @@
                 android:layout_below="@id/recipeTitle"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:textAlignment="center"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam.">
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam."
+                android:maxLines="5"
+                android:ellipsize="end">
             </TextView>
 
 

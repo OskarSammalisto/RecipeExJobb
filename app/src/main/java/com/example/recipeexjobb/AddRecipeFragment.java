@@ -48,6 +48,12 @@ import static android.app.Activity.RESULT_OK;
 
 public class AddRecipeFragment extends Fragment {
 
+
+    //This fragment is where the user adds new recipes. the recipes can be added by simply writing in the text manually or
+    //by taking a photo of the text and filling the appropriate text box automatically.
+
+
+
     //Button variables
     private ImageButton saveRecipeButton;
     private ImageButton cancelButton;
@@ -79,6 +85,10 @@ public class AddRecipeFragment extends Fragment {
 
     //String to create photo path for new photos
     private String currentPhotoPath;
+
+
+    //booleans for identifying first change in text views, so that sample text is removed.
+    private boolean titleChanged, descriptionChanged, ingredientsChanged, instructionsChanged  = false;
 
 
 
@@ -142,13 +152,19 @@ public class AddRecipeFragment extends Fragment {
         });
 
 
-        //Click listeners to edit text in text views
+        //Click listeners to edit text in text views, opens up an edit text alert dialog.
 
         //Title View
         recipeTitle.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
+
+                //removes hardcoded text from text view
+                if(!titleChanged){
+                    recipeTitle.setText("");
+                    titleChanged = true;
+                }
 
                 setViewText(recipeTitle);
 
@@ -159,6 +175,12 @@ public class AddRecipeFragment extends Fragment {
         recipeDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //removes hardcoded text from text view
+                if(!descriptionChanged){
+                    recipeDescription.setText("");
+                    descriptionChanged = true;
+                }
                 setViewText(recipeDescription);
             }
         });
@@ -167,6 +189,12 @@ public class AddRecipeFragment extends Fragment {
         recipeIngredients.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //removes hardcoded text from text view
+                if(!ingredientsChanged){
+                    recipeIngredients.setText("");
+                    ingredientsChanged = true;
+                }
                 setViewText(recipeIngredients);
             }
         });
@@ -175,6 +203,13 @@ public class AddRecipeFragment extends Fragment {
         recipeInstructions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //removes hardcoded text from text view
+                if(!instructionsChanged){
+                    recipeInstructions.setText("");
+                    instructionsChanged = true;
+                }
+
                 setViewText(recipeInstructions);
             }
         });
@@ -187,6 +222,13 @@ public class AddRecipeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+
+                //removes hardcoded text from text view
+                if(!ingredientsChanged){
+                    recipeIngredients.setText("");
+                    ingredientsChanged = true;
+                }
+
                 //open camera and do stuff with image
                 imageToTextEditText = recipeIngredients;
                 dispatchTakePictureIntent();
@@ -198,6 +240,13 @@ public class AddRecipeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+
+                //removes hardcoded text from text view
+                if(!instructionsChanged){
+                    recipeInstructions.setText("");
+                    instructionsChanged = true;
+                }
+
                 imageToTextEditText = recipeInstructions;
                 dispatchTakePictureIntent();
                 //open camera and do stuff with image
@@ -208,18 +257,18 @@ public class AddRecipeFragment extends Fragment {
         return view;
     }
 
+
     private void closeFragment(){
         getFragmentManager().beginTransaction().remove(AddRecipeFragment.this).commit();
     }
 
 
     //Open alert dialog to edit text in text views
-
     public void setViewText(final TextView textView){
 
         AlertDialog.Builder editTextPopup = new AlertDialog.Builder(getContext());
 
-        editTextPopup.setTitle("Recipe Title");
+        editTextPopup.setTitle("Text Editor");
 
         final EditText titleInput = new EditText(getContext());
         titleInput.setText(textView.getText());
@@ -351,6 +400,7 @@ public class AddRecipeFragment extends Fragment {
                         //set returned text as text in text box
                         String resultText = result.getText();
                         imageToTextEditText.append(resultText);
+                        photoFile.delete();  //deletes the image used for text.
 
 
                         // Task completed successfully
