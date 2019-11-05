@@ -1,5 +1,8 @@
 package com.example.recipeexjobb;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Recipe {
 
     private int image;
@@ -9,15 +12,17 @@ public class Recipe {
     private String recipeInstructions;
     private int recipeCategory;
     private boolean onWeeksMenu;
-    private String[] recipeTagArray;
+    private List<IngredientItem> ingredientsList;
 
-    public Recipe(int image, String recipeTitle, String recipeDescription, String recipeIngredients, String recipeInstructions, int category) {
+    public Recipe(int image, String recipeTitle, String recipeDescription, String recipeIngredients,
+                  String recipeInstructions, int category, List<IngredientItem> ingredientsList) {
         this.image = image;
         this.recipeTitle = recipeTitle;
         this.recipeDescription = recipeDescription;
         this.recipeIngredients = recipeIngredients;
         this.recipeInstructions = recipeInstructions;
         this.recipeCategory = category;
+        this.ingredientsList = ingredientsList;
     }
 
     public int getImage() {
@@ -76,11 +81,11 @@ public class Recipe {
         this.recipeCategory = recipeCategory;
     }
 
-    public String[] getRecipeTagArray() {
-        return recipeTagArray;
+    public List<IngredientItem> getIngredientsList() {
+        return ingredientsList;
     }
 
-    public void setRecipeTagArray(String[] recipeTagArray) {
-        this.recipeTagArray = recipeTagArray;
+    public void setIngredientsList(List<IngredientItem> ingredientsList) {
+        this.ingredientsList = ingredientsList;
     }
 }

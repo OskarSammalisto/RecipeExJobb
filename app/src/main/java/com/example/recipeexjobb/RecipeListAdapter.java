@@ -21,7 +21,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        //        public CardView cardView;
+
         ImageView recipeImage;
         TextView recipeTitle, recipeDescription;
         public MyViewHolder(View view){

@@ -69,11 +69,34 @@
         android:text="click to add description"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:id="@+id/addIngredientButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/addRecipeDescription"
+        android:text="add ingredient">
+
+    </Button>
+
+    <ImageButton
+        android:id="@+id/cameraAddIngredientsAsList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/addIngredientButton"
+        android:layout_below="@id/addRecipeDescription"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
+        android:src="@drawable/round_photo_camera_black_18dp"
+        android:background="@null" />
+
+
     <androidx.recyclerview.widget.RecyclerView
+
         android:id="@+id/addItemRecycleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/addRecipeDescription">
+        android:layout_below="@id/addIngredientButton">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -84,7 +107,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/addItemRecycleView"
         android:layout_marginTop="30dp"
-        android:text="click to add ingredients"
+        android:text="click to add ingredients in plain text"
         android:layout_centerHorizontal="true" />
 
     <ImageButton

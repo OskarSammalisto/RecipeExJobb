@@ -101,9 +101,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Create a new recipe and add to Recipe List
-    public void createRecipe(String title, String description, String ingredients, String instructions, int category){
-        Recipe recipe = new Recipe(R.drawable.knight_sprite, title, description, ingredients, instructions, category);
+    public void createRecipe(String title, String description, String ingredients, String instructions, int category, List<IngredientItem> ingredientItemList){
+        Recipe recipe = new Recipe(R.drawable.knight_sprite, title, description, ingredients, instructions, category, ingredientItemList);
         recipeList.add(recipe);
+
 
 
         Toast.makeText(MainActivity.this, "Recipe added to collection.", Toast.LENGTH_SHORT).show();

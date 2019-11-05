@@ -4,6 +4,11 @@ public class IngredientItem {
     private int amount, unit;
     private String ingredient;
 
+    public IngredientItem(){
+            this.amount = 0;
+            this.unit = 0;
+            this.ingredient = "Ingredient Name Empty";
+    }
 
     public IngredientItem(int amount, int unit, String ingredient) {
         this.amount = amount;

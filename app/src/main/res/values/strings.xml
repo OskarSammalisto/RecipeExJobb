@@ -20,6 +20,24 @@
         <item>All Recipes</item>
     </string-array>
 
+    <string-array name="measurementUnits">
+        <item>N/A</item>
+        <item>Kg</item>
+        <item>hg</item>
+        <item>g</item>
+        <item>Litre</item>
+        <item>dl</item>
+        <item>cl</item>
+        <item>ml</item>
+        <item>tbsp</item>
+        <item>tsp</item>
+        <item>Pound</item>
+        <item>Ounce</item>
+        <item>Pint</item>
+        <item>fl.oz</item>
+        <item>cup</item>
+    </string-array>
+
 
     <string name="app_name">RecipeExJobb</string>
     <string name="email">email</string>

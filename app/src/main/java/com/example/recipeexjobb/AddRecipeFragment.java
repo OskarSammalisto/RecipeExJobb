@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -66,6 +67,7 @@ public class AddRecipeFragment extends Fragment {
     private ImageButton cancelButton;
     private ImageButton ingredientsFromImage;
     private ImageButton instructionsFromImage;
+    private ImageButton ingredientsListFromImage;
 
     //text View variables
     private TextView recipeTitle;
@@ -109,6 +111,9 @@ public class AddRecipeFragment extends Fragment {
     //Spinner for selecting recipe category
     private Spinner categorySpinner;
 
+    //boolean to determine whether text is analyzed or returned as plain text
+    boolean imageToList = false;
+
 
 
     @Override
@@ -141,6 +146,7 @@ public class AddRecipeFragment extends Fragment {
         cancelButton = view.findViewById(R.id.exitAddRecipe);
         ingredientsFromImage = view.findViewById(R.id.cameraAddIngredients);
         instructionsFromImage = view.findViewById(R.id.cameraAddInstructions);
+        ingredientsListFromImage = view.findViewById(R.id.cameraAddIngredientsAsList);
 
         recipeTitle = view.findViewById(R.id.addRecipeTitle);
         recipeDescription = view.findViewById(R.id.addRecipeDescription);
@@ -175,7 +181,7 @@ public class AddRecipeFragment extends Fragment {
 
 
 
-                ((MainActivity) getActivity()).createRecipe(title, description, ingredients, instructions, category);
+                ((MainActivity) getActivity()).createRecipe(title, description, ingredients, instructions, category, ingredientsList);
 
 
                 closeFragment();
@@ -265,6 +271,15 @@ public class AddRecipeFragment extends Fragment {
             }
         });
 
+        //button to read ingredients and analyze text to make a list of ingredients objects
+        ingredientsListFromImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageToList = true;
+                dispatchTakePictureIntent();
+            }
+        });
+
         //Button to read instructions from an image taken with the camera
         instructionsFromImage.setOnClickListener(new View.OnClickListener(){
 
@@ -285,13 +300,31 @@ public class AddRecipeFragment extends Fragment {
 
         //set recycler view adapter for ingredients list
         //View ingredientsView = inflater.inflate(R.layout.)
+        //ingredientsList.add(new IngredientItem());
         recyclerView = view.findViewById(R.id.addItemRecycleView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        addIngredientAdapter = new AddIngredientAdapter(view.getContext(), numberOfIngredients );
+        addIngredientAdapter = new AddIngredientAdapter(view.getContext(), ingredientsList);
         recyclerView.setAdapter(addIngredientAdapter);
 
+        Button button = view.findViewById(R.id.addIngredientButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addIngredient();
+            }
+        });
+
         return view;
+    }
+
+    //increase number of ingredients
+    public void addIngredient(){
+            IngredientItem ingredientItem = new IngredientItem();
+            ingredientsList.add(ingredientItem);
+            addIngredientAdapter.notifyDataSetChanged();
+
+
     }
 
 
@@ -388,7 +421,11 @@ public class AddRecipeFragment extends Fragment {
 
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                readTextInImage(bitmap);
+
+
+                    readTextInImage(bitmap);
+
+
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -444,14 +481,22 @@ public class AddRecipeFragment extends Fragment {
                     public void onSuccess(FirebaseVisionText result) {
                         Log.d("image processing", "success");
 
+                        //analyze text and create ingredients objects
+                        if(imageToList){
+                            imageToList = false;
+                            generateIngredientsList(result);
+                        }
+
                         //set returned text as text in text box
-                        String resultText = result.getText();
-                        imageToTextEditText.append(resultText);
+                        else {
+                            String resultText = result.getText();
+                            imageToTextEditText.append(resultText);
+                        }
+
+
                         photoFile.delete();  //deletes the image used for text.
 
 
-                        // Task completed successfully
-                        // ...
                     }
                 })
                 .addOnFailureListener(
@@ -463,6 +508,50 @@ public class AddRecipeFragment extends Fragment {
                                 // ...
                             }
                         });
+
+
+
+    }
+
+
+    //create ingredients as objects and add to list
+    private void generateIngredientsList(FirebaseVisionText result){
+
+
+        for(FirebaseVisionText.TextBlock block: result.getTextBlocks()) {
+            for (FirebaseVisionText.Line line: block.getLines()){
+                List<String> words = new ArrayList<>();
+                for (FirebaseVisionText.Element element: line.getElements()){
+                    String word = element.getText();
+                   // Log.d("output", element.toString());
+                    words.add(word);
+                }
+                int amount = 0;
+
+                try {
+                    amount = Integer.parseInt(words.get(0));
+                }catch (Exception e){
+                    Log.d("parse int ", "parse Unsuccessful on: " + words.get(0));
+                }
+
+                if(amount > 0){
+                    IngredientItem item = new IngredientItem(amount, 0, "success");
+                    ingredientsList.add(item);
+                    addIngredientAdapter.notifyDataSetChanged();
+
+                }
+
+
+
+            }
+
+
+        }
+
+
+
+
+
 
 
 
