@@ -527,6 +527,8 @@ public class AddRecipeFragment extends Fragment {
                     words.add(word);
                 }
                 int amount = 0;
+                int unit = 0;
+                String ingredient = "";
 
                 try {
                     amount = Integer.parseInt(words.get(0));
@@ -534,11 +536,16 @@ public class AddRecipeFragment extends Fragment {
                     Log.d("parse int ", "parse Unsuccessful on: " + words.get(0));
                 }
 
-                if(amount > 0){
-                    IngredientItem item = new IngredientItem(amount, 0, "success");
+                try{
+                    unit = analyzeMeasurement(words.get(1));
+                    ingredient = generateIngredientName(amount, unit, words);
+                    IngredientItem item = new IngredientItem(amount, unit, ingredient);
                     ingredientsList.add(item);
                     addIngredientAdapter.notifyDataSetChanged();
 
+                }
+                catch (Exception e){
+                    Log.d("creating ingredients", "creationg ingredient unsuccessful: " + e);
                 }
 
 
@@ -549,15 +556,86 @@ public class AddRecipeFragment extends Fragment {
         }
 
 
-
-
-
-
-
-
     }
 
+    private String generateIngredientName(int amount, int unit, List<String> words){
 
+        StringBuilder ingredientName = new StringBuilder();
+
+        if(amount > 0 && unit > 0){
+            for(int i = 2; i < words.size() ; i++){
+                ingredientName.append(words.get(i));
+                ingredientName.append("\t");
+            }
+        }
+
+        else if(amount > 0){
+            for(int i = 1; i < words.size() ; i++){
+                ingredientName.append(words.get(i));
+                ingredientName.append("\t");
+            }
+
+        }
+
+        else {
+            for(int i = 0; i < words.size() ; i++){
+                ingredientName.append(words.get(i));
+                ingredientName.append("\t");
+            }
+        }
+
+
+        Log.d("unit", "unit: " + unit);
+
+        return String.valueOf(ingredientName);
+    }
+
+    private int analyzeMeasurement(String string){
+
+
+
+//        N/A = 0
+//        Kg = 1
+//        hg = 2
+//        g = 3
+//        Litre = 4
+//        dl = 5
+//        cl = 6
+//        ml = 7
+//        tbsp = 8
+//        tsp = 9
+//        Pound = 10
+//        Ounce = 11
+//        Pint = 12
+//        fl.oz = 13
+//        cup = 14
+
+        String searchWord = string.toLowerCase();
+        if(searchWord.equals("litre")){
+            searchWord = "liter";
+        }
+        if(searchWord.equals("msk")){
+            searchWord = "tbsp";
+        }
+        if(searchWord.equals("tsk")){
+            searchWord = "tsp";
+        }
+
+
+        if(searchWord.equals("krydddmått")){
+            return 7;
+        }
+        String[] comparisonArray = new String[]{"void", "kg", "hg", "g", "liter", "dl", "cl", "ml", "tbsp", "tsp", "pound", "ounce", "pint", "fl.oz", "cup"};
+
+       for(int i = 0; i < comparisonArray.length; i++){
+           if(searchWord.equals(comparisonArray[i])){
+               return i;
+           }
+       }
+
+
+        return 0;
+    }
 
 
 

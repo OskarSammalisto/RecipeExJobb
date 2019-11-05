@@ -57,6 +57,7 @@ public class AddIngredientAdapter extends RecyclerView.Adapter<AddIngredientAdap
 
             holder.setAmount.setText(String.valueOf(ingredientsList.get(position).getAmount()));
             holder.setIngredient.setText(ingredientsList.get(position).getIngredient());
+            holder.setUnit.setSelection(ingredientsList.get(position).getUnit());
 
         }
 
