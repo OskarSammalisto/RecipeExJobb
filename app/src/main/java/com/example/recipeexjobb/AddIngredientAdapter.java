@@ -1,9 +1,12 @@
 package com.example.recipeexjobb;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -11,7 +14,6 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.EventListener;
 import java.util.List;
 
 public class AddIngredientAdapter extends RecyclerView.Adapter<AddIngredientAdapter.MyViewHolder>  {
@@ -23,6 +25,9 @@ public class AddIngredientAdapter extends RecyclerView.Adapter<AddIngredientAdap
 
     public interface EventListener{
         void removeIngredient(int position);
+        void editIngredientAmount(int position,double amount);
+        void editIngredientMeasurement(int position, int unit);
+        void editIngredientName(int position, String name);
     }
 
 
@@ -38,8 +43,61 @@ public class AddIngredientAdapter extends RecyclerView.Adapter<AddIngredientAdap
             super(view);
 
             setAmount = view.findViewById(R.id.setAmountTextView);
+            setAmount.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if(setAmount.getText().toString().length() > 0){
+                        listener.editIngredientAmount(getAdapterPosition(), Double.parseDouble(setAmount.getText().toString()));
+                    }
+                    else {
+                        listener.editIngredientAmount(getAdapterPosition(), 0);
+                    }
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
             setIngredient = view.findViewById(R.id.setIngredientTextView);
+            setIngredient.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    listener.editIngredientName(getAdapterPosition(), setIngredient.getText().toString());
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
             setUnit = view.findViewById(R.id.setUnitSpinner);
+            setUnit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    listener.editIngredientMeasurement(getAdapterPosition(), setUnit.getSelectedItemPosition());
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
             removeIngredientButton = view.findViewById(R.id.removeIngredientButton);
 
             removeIngredientButton.setOnClickListener(new View.OnClickListener() {

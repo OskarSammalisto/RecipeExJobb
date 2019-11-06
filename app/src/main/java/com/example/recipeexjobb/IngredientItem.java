@@ -1,7 +1,8 @@
 package com.example.recipeexjobb;
 
 public class IngredientItem {
-    private int amount, unit;
+    private double amount;
+    private int unit;
     private String ingredient;
 
     public IngredientItem(){
@@ -10,17 +11,17 @@ public class IngredientItem {
 //            this.ingredient = "Ingredient Name Empty";
     }
 
-    public IngredientItem(int amount, int unit, String ingredient) {
+    public IngredientItem(double amount, int unit, String ingredient) {
         this.amount = amount;
         this.unit = unit;
         this.ingredient = ingredient;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

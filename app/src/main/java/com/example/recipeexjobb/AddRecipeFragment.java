@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
+import static java.lang.Double.parseDouble;
 
 public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.EventListener {
 
@@ -330,6 +331,19 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
         addIngredientAdapter.notifyDataSetChanged();
     }
 
+    public void editIngredientAmount(int position,double amount){
+        ingredientsList.get(position).setAmount(amount);
+    }
+
+    public void editIngredientMeasurement(int position, int unit){
+        ingredientsList.get(position).setUnit(unit);
+    }
+
+    public void editIngredientName(int position, String name){
+        ingredientsList.get(position).setIngredient(name);
+    }
+
+
 
     private void closeFragment(){
         getFragmentManager().beginTransaction().remove(AddRecipeFragment.this).commit();
@@ -529,15 +543,35 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
                    // Log.d("output", element.toString());
                     words.add(word);
                 }
-                int amount = 0;
+                double amount = 0;
                 int unit = 0;
                 String ingredient = "";
 
                 try {
-                    amount = Integer.parseInt(words.get(0));
+
+                    amount = parseDouble(words.get(0));
+
+
+                    // it seems to have a hard time understanding fractions
+//                    if(words.get(0).equals("¼")){
+//                        amount = 0.25;
+//                    }
+//
+//                    if(words.get(0).equals("½")){
+//                        amount = 0.5;
+//                    }
+//
+//                    if(words.get(0).equals("¾")){
+//                        amount = 0.75;
+//                    }
+
                 }catch (Exception e){
+
                     Log.d("parse int ", "parse Unsuccessful on: " + words.get(0));
                 }
+
+
+
 
                 try{
                     unit = analyzeMeasurement(words.get(1));
@@ -561,7 +595,7 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
 
     }
 
-    private String generateIngredientName(int amount, int unit, List<String> words){
+    private String generateIngredientName(double amount, int unit, List<String> words){
 
         StringBuilder ingredientName = new StringBuilder();
 

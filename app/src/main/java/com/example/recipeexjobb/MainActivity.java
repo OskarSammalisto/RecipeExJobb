@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -139,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         Toast.makeText(MainActivity.this, "Recipe added to collection.", Toast.LENGTH_SHORT).show();
+        Log.d("rec amount", "amount: " + recipe.getIngredientsList().get(0).getAmount());
     }
 
     public List<Recipe> getRecipeList(){
