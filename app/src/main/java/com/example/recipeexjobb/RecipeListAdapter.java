@@ -20,7 +20,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
     private EventListener listener;
 
     public interface EventListener{
-        void openRecipe(int index);
+        void openRecipe(Recipe recipe);
     }
 
 
@@ -37,7 +37,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
                 @Override
                 public void onClick(View v) {
 
-                    listener.openRecipe(getAdapterPosition());
+                    listener.openRecipe(recipeList.get(getAdapterPosition()));
 
                 }
             });
@@ -77,8 +77,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
         holder.recipeDescription.setText(recipe.getRecipeDescription());
 
         holder.recipeImage.setImageDrawable(context.getResources().getDrawable(recipe.getImage()));
-
-
 
 
     }

@@ -150,9 +150,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void openRecipe(int index){
+    public void openRecipe(Recipe recipe){ //int index
 
-        setCurrentRecipe(index);
+        setCurrentRecipe(recipe);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.frameLayoutForRecipes, new DisplayRecipeFragment());
@@ -160,8 +160,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setCurrentRecipe(int position){
-        selectedRecipe = recipeList.get(position);
+    private void setCurrentRecipe(Recipe recipe){
+        selectedRecipe = recipe; 
     }
 
     public Recipe getCurrentRecipe(){
