@@ -13,6 +13,23 @@ public class Recipe {
     private int recipeCategory;
     private boolean onWeeksMenu;
     private List<IngredientItem> ingredientsList;
+    private String recipestorageID;
+
+    public String getRecipestorageID() {
+        return recipestorageID;
+    }
+
+    public String setRecipestorageID(){
+        long tsLong = System.currentTimeMillis()/1000;
+        this.recipestorageID = Long.toString(tsLong);
+
+        return recipestorageID;
+
+    }
+
+    public Recipe(){
+
+    }
 
     public Recipe(int image, String recipeTitle, String recipeDescription, String recipeIngredients,
                   String recipeInstructions, int category, List<IngredientItem> ingredientsList) {

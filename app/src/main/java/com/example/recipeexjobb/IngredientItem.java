@@ -6,9 +6,7 @@ public class IngredientItem {
     private String ingredient;
 
     public IngredientItem(){
-//            this.amount = 0;
-//            this.unit = 0;
-//            this.ingredient = "Ingredient Name Empty";
+
     }
 
     public IngredientItem(double amount, int unit, String ingredient) {

@@ -20,6 +20,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +29,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +71,36 @@ public class MainActivity extends AppCompatActivity {
         myRef = database.getReference();
         fireStoreDb = FirebaseFirestore.getInstance();
 
+        //instantiate recipe list if null
+        if(recipeList == null){
+            recipeList = new ArrayList<>();
+        }
+
+        //get data from fire store if recipe list is empty
+        if(recipeList.isEmpty()){
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            CollectionReference collectionReference = db.collection("users")
+                    .document(mAuth.getUid()).collection("Recipes");
+
+            collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if(task.isSuccessful()){
+                        for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                            Recipe recipe = documentSnapshot.toObject(Recipe.class);
+                            recipeList.add(recipe);
+                        }
+
+                    }
+                    else {
+                        Log.d("load from fires tore", "Error getting documents: ", task.getException());
+                    }
+                }
+            });
+
+
+
+        }
 
 //        myRef.addValueEventListener(new ValueEventListener() {
 //            @Override
@@ -79,10 +114,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        //instantiate recipe list if null
-        if(recipeList == null){
-            recipeList = new ArrayList<>();
-        }
+
 
         //instantiate button variables
         addRecipeButton = findViewById(R.id.addRecipeButton);
@@ -135,12 +167,13 @@ public class MainActivity extends AppCompatActivity {
         Recipe recipe = new Recipe(R.drawable.knight_sprite, title, description, ingredients, instructions, category, ingredientItemList);
         recipeList.add(recipe);
 
-        myRef.child("users").child(mAuth.getUid()).child("recipes").setValue(recipeList);
 
-
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference collectionReference = db.collection("users").document(mAuth.getUid()).collection("Recipes");
+        collectionReference.document(recipe.setRecipestorageID()).set(recipe);
+     //   myRef.child("users").child(mAuth.getUid()).child("recipes").setValue(recipeList);
 
         Toast.makeText(MainActivity.this, "Recipe added to collection.", Toast.LENGTH_SHORT).show();
-        Log.d("rec amount", "amount: " + recipe.getIngredientsList().get(0).getAmount());
     }
 
     public List<Recipe> getRecipeList(){
