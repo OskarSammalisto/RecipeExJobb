@@ -4,13 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.EventListener;
 import java.util.List;
 
 public class AddIngredientAdapter extends RecyclerView.Adapter<AddIngredientAdapter.MyViewHolder>  {
@@ -18,11 +19,20 @@ public class AddIngredientAdapter extends RecyclerView.Adapter<AddIngredientAdap
     private Context context;
     private int numberOfIngredients;
     private List<IngredientItem> ingredientsList;
+    EventListener listener;
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public interface EventListener{
+        void removeIngredient(int position);
+    }
+
+
+
+
+    public  class MyViewHolder extends RecyclerView.ViewHolder { //removed static from class
 
         EditText setAmount, setIngredient;
         Spinner setUnit;
+        ImageButton removeIngredientButton;
 
         public MyViewHolder(View view){
             super(view);
@@ -30,14 +40,24 @@ public class AddIngredientAdapter extends RecyclerView.Adapter<AddIngredientAdap
             setAmount = view.findViewById(R.id.setAmountTextView);
             setIngredient = view.findViewById(R.id.setIngredientTextView);
             setUnit = view.findViewById(R.id.setUnitSpinner);
+            removeIngredientButton = view.findViewById(R.id.removeIngredientButton);
+
+            removeIngredientButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.removeIngredient(getAdapterPosition());
+                }
+            });
 
         }
     }
 
-    public AddIngredientAdapter(Context context, List<IngredientItem> ingredientsList){
+    public AddIngredientAdapter(Context context, List<IngredientItem> ingredientsList, EventListener listener){
 
         this.context = context;
         this.ingredientsList = ingredientsList;
+        this.listener = listener;
+
 
 
     }

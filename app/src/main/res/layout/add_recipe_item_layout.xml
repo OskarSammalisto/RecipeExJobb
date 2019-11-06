@@ -20,10 +20,18 @@
 
     <EditText
         android:id="@+id/setIngredientTextView"
-        android:layout_width="200dp"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp">
-
     </EditText>
+
+    <ImageButton
+        android:id="@+id/removeIngredientButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/round_clear_black_18dp"
+        android:layout_marginStart="10dp">
+
+    </ImageButton>
 
 </LinearLayout>

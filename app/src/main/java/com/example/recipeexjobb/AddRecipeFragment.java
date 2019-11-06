@@ -2,7 +2,6 @@ package com.example.recipeexjobb;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,7 +9,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +21,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,7 +28,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,7 +35,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
@@ -54,7 +49,7 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-public class AddRecipeFragment extends Fragment {
+public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.EventListener {
 
 
     //This fragment is where the user adds new recipes. the recipes can be added by simply writing in the text manually or
@@ -304,7 +299,7 @@ public class AddRecipeFragment extends Fragment {
         recyclerView = view.findViewById(R.id.addItemRecycleView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        addIngredientAdapter = new AddIngredientAdapter(view.getContext(), ingredientsList);
+        addIngredientAdapter = new AddIngredientAdapter(view.getContext(), ingredientsList, this);
         recyclerView.setAdapter(addIngredientAdapter);
 
         Button button = view.findViewById(R.id.addIngredientButton);
@@ -319,12 +314,20 @@ public class AddRecipeFragment extends Fragment {
     }
 
     //increase number of ingredients
-    public void addIngredient(){
+    private void addIngredient(){
             IngredientItem ingredientItem = new IngredientItem();
             ingredientsList.add(ingredientItem);
-            addIngredientAdapter.notifyDataSetChanged();
+            updateAdapterList();
 
+    }
 
+    public void removeIngredient(int position){
+        ingredientsList.remove(position);
+        updateAdapterList();
+    }
+
+    private void updateAdapterList(){
+        addIngredientAdapter.notifyDataSetChanged();
     }
 
 

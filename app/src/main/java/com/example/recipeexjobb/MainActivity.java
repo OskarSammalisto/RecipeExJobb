@@ -21,6 +21,12 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
 
     //All fireBase instances
     private FirebaseAuth mAuth;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
+    FirebaseFirestore fireStoreDb;
+
 
     //Adapter for fragment pager adapter
     FragmentPagerAdapter adapterViewPager;
@@ -51,6 +61,22 @@ public class MainActivity extends AppCompatActivity {
 
         //instantiates fireBase auth
         mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
+        fireStoreDb = FirebaseFirestore.getInstance();
+
+
+//        myRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         //instantiate recipe list if null
         if(recipeList == null){
@@ -102,8 +128,13 @@ public class MainActivity extends AppCompatActivity {
 
     //Create a new recipe and add to Recipe List
     public void createRecipe(String title, String description, String ingredients, String instructions, int category, List<IngredientItem> ingredientItemList){
+
+
+
         Recipe recipe = new Recipe(R.drawable.knight_sprite, title, description, ingredients, instructions, category, ingredientItemList);
         recipeList.add(recipe);
+
+        myRef.child("users").child(mAuth.getUid()).child("recipes").setValue(recipeList);
 
 
 

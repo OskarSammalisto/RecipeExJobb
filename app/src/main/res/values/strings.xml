@@ -21,7 +21,7 @@
     </string-array>
 
     <string-array name="measurementUnits">
-        <item>N/A</item>
+        <item>-</item>
         <item>Kg</item>
         <item>hg</item>
         <item>g</item>
