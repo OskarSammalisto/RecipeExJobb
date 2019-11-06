@@ -17,17 +17,30 @@ import java.util.List;
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.MyViewHolder> {
     private List<Recipe> recipeList;
     private Context context;
+    private EventListener listener;
+
+    public interface EventListener{
+        void openRecipe(int index);
+    }
 
 
 
-
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
 
         ImageView recipeImage;
         TextView recipeTitle, recipeDescription;
         public MyViewHolder(View view){
             super(view);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    listener.openRecipe(getAdapterPosition());
+
+                }
+            });
 
             recipeImage = view.findViewById(R.id.recipeImage);
             recipeTitle = view.findViewById(R.id.recipeTitle);
@@ -38,10 +51,11 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
 
 
 
-    public RecipeListAdapter(Context context, List<Recipe> recipes){
+    public RecipeListAdapter(Context context, List<Recipe> recipes, EventListener listener){
 
         this.recipeList = recipes;
         this.context = context;
+        this.listener = listener;
     }
 
 
@@ -63,6 +77,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
         holder.recipeDescription.setText(recipe.getRecipeDescription());
 
         holder.recipeImage.setImageDrawable(context.getResources().getDrawable(recipe.getImage()));
+
+
+
 
     }
 

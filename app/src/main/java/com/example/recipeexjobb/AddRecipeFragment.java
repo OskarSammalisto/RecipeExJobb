@@ -126,6 +126,7 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
         View view = inflater.inflate(R.layout.fragment_add_recipie, container, false);
 
 
+
         //init spinner and set categories
         categorySpinner = view.findViewById(R.id.categorySpinner);
         fillCategorySpinner();

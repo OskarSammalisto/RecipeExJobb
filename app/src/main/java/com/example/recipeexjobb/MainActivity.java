@@ -57,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
     //Main Recipe List
     private List<Recipe> recipeList;
 
+    //recipe that should be displayed in recipe fragment
+    Recipe selectedRecipe;
+
 
 
 
@@ -102,17 +105,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-//        myRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
 
 
 
@@ -156,6 +148,24 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapterViewPager);
 
 
+    }
+
+    public void openRecipe(int index){
+
+        setCurrentRecipe(index);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frameLayoutForRecipes, new DisplayRecipeFragment());
+        ft.commit();
+
+    }
+
+    private void setCurrentRecipe(int position){
+        selectedRecipe = recipeList.get(position);
+    }
+
+    public Recipe getCurrentRecipe(){
+        return selectedRecipe;
     }
 
 

@@ -3,13 +3,16 @@ package com.example.recipeexjobb;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryFragment extends Fragment {
+public class CategoryFragment extends Fragment implements RecipeListAdapter.EventListener {
 
     //name and number of tab
     private int page;
@@ -60,7 +63,7 @@ public class CategoryFragment extends Fragment {
 
 
 
-        View view = inflater.inflate(R.layout.fragment_category, container, false);
+        final View view = inflater.inflate(R.layout.fragment_category, container, false);
         recyclerView = view.findViewById(R.id.recipeRecycleView);
         recyclerView.setHasFixedSize(true);
 
@@ -90,11 +93,59 @@ public class CategoryFragment extends Fragment {
         }
 
 
-        recipeListAdapter = new RecipeListAdapter(view.getContext(), categorizedList);
+        recipeListAdapter = new RecipeListAdapter(view.getContext(), categorizedList, this);
         recyclerView.setAdapter(recipeListAdapter);
+
+
+//        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+//
+//            private long lastTouchDown;
+//            private int CLICK_ACTION_THRESHOLD = 300;
+//            @Override
+//            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+//                Log.d("touch", "inter");
+//                switch (e.getAction()){
+//                    case MotionEvent.ACTION_DOWN:
+//                        lastTouchDown = System.currentTimeMillis();
+//                        break;
+//                    case MotionEvent.ACTION_UP:
+//                        if (System.currentTimeMillis() - lastTouchDown < CLICK_ACTION_THRESHOLD) {
+//                           openRecipe(rv);
+//                            Log.d("touch", "Touch");
+//                        }
+//                        break;
+//
+//                }
+//
+//                return false;
+//            }
+//
+//            @Override
+//            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+//
+//
+//
+//            }
+//
+//            @Override
+//            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+//
+//            }
+//        });
+
+
 
         return view;
     }
+
+    @Override
+    public void openRecipe(int index) {
+        ((MainActivity) getActivity()).openRecipe(index);
+    }
+
+//    private void openRecipe(RecyclerView rv){
+//        ((MainActivity) getActivity()).openRecipe(rv.getChildAdapterPosition(getView()));
+//    }
 
 //    public void updateRecipeList (){
 //        recipeListAdapter.notifyDataSetChanged();
