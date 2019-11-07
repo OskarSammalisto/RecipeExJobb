@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setCurrentRecipe(Recipe recipe){
-        selectedRecipe = recipe; 
+        selectedRecipe = recipe;
     }
 
     public Recipe getCurrentRecipe(){
@@ -170,11 +170,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Create a new recipe and add to Recipe List
-    public void createRecipe(String title, String description, String ingredients, String instructions, int category, List<IngredientItem> ingredientItemList){
+    public void createRecipe(String title, String description, String instructions, int category, List<IngredientItem> ingredientItemList){
 
 
 
-        Recipe recipe = new Recipe(R.drawable.knight_sprite, title, description, ingredients, instructions, category, ingredientItemList);
+        Recipe recipe = new Recipe(R.drawable.knight_sprite, title, description, instructions, category, ingredientItemList);
         recipeList.add(recipe);
 
 

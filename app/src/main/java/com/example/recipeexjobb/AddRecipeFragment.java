@@ -61,14 +61,14 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
     //Button variables
     private ImageButton saveRecipeButton;
     private ImageButton cancelButton;
-    private ImageButton ingredientsFromImage;
+   // private ImageButton ingredientsFromImage;
     private ImageButton instructionsFromImage;
     private ImageButton ingredientsListFromImage;
 
     //text View variables
     private TextView recipeTitle;
     private TextView recipeDescription;
-    private TextView recipeIngredients;
+   // private TextView recipeIngredients;
     private TextView recipeInstructions;
 
     //ArrayList for ingredients in new recipe
@@ -141,13 +141,13 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
         //instantiate button variables, text views and edit text
         saveRecipeButton = view.findViewById(R.id.saveRecipe);
         cancelButton = view.findViewById(R.id.exitAddRecipe);
-        ingredientsFromImage = view.findViewById(R.id.cameraAddIngredients);
+       // ingredientsFromImage = view.findViewById(R.id.cameraAddIngredients);
         instructionsFromImage = view.findViewById(R.id.cameraAddInstructions);
         ingredientsListFromImage = view.findViewById(R.id.cameraAddIngredientsAsList);
 
         recipeTitle = view.findViewById(R.id.addRecipeTitle);
         recipeDescription = view.findViewById(R.id.addRecipeDescription);
-        recipeIngredients = view.findViewById(R.id.addRecipeIngredients);
+       // recipeIngredients = view.findViewById(R.id.addRecipeIngredients);
         recipeInstructions = view.findViewById(R.id.addRecipeInstructions);
 
 
@@ -171,14 +171,14 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
 
                 String title = recipeTitle.getText().toString();
                 String description = recipeDescription.getText().toString();
-                String ingredients = recipeIngredients.getText().toString();
+               // String ingredients = recipeIngredients.getText().toString();
                 String instructions = recipeInstructions.getText().toString();
 
                 int category = categorySpinner.getSelectedItemPosition() -1;
 
 
 
-                ((MainActivity) getActivity()).createRecipe(title, description, ingredients, instructions, category, ingredientsList);
+                ((MainActivity) getActivity()).createRecipe(title, description, instructions, category, ingredientsList);
 
 
                 closeFragment();
@@ -220,18 +220,18 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
         });
 
         //Ingredients view
-        recipeIngredients.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //removes hardcoded text from text view
-                if(!ingredientsChanged){
-                    recipeIngredients.setText("");
-                    ingredientsChanged = true;
-                }
-                setViewText(recipeIngredients);
-            }
-        });
+//        recipeIngredients.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                //removes hardcoded text from text view
+//                if(!ingredientsChanged){
+//                    recipeIngredients.setText("");
+//                    ingredientsChanged = true;
+//                }
+//                setViewText(recipeIngredients);
+//            }
+//        });
 
         //Instructions View
         recipeInstructions.setOnClickListener(new View.OnClickListener() {
@@ -251,22 +251,22 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
 
 
         //Button to read ingredients from an image taken with the camera
-        ingredientsFromImage.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                //removes hardcoded text from text view
-                if(!ingredientsChanged){
-                    recipeIngredients.setText("");
-                    ingredientsChanged = true;
-                }
-
-                //open camera and do stuff with image
-                imageToTextEditText = recipeIngredients;
-                dispatchTakePictureIntent();
-            }
-        });
+//        ingredientsFromImage.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//
+//                //removes hardcoded text from text view
+//                if(!ingredientsChanged){
+//                    recipeIngredients.setText("");
+//                    ingredientsChanged = true;
+//                }
+//
+//                //open camera and do stuff with image
+//                imageToTextEditText = recipeIngredients;
+//                dispatchTakePictureIntent();
+//            }
+//        });
 
         //button to read ingredients and analyze text to make a list of ingredients objects
         ingredientsListFromImage.setOnClickListener(new View.OnClickListener() {

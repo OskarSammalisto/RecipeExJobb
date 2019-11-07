@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class DisplayIngredientsListInRecipeAdapter extends RecyclerView.Adapter<DisplayIngredientsListInRecipeAdapter.MyViewHolder> {
@@ -18,9 +19,12 @@ public class DisplayIngredientsListInRecipeAdapter extends RecyclerView.Adapter<
     private List<IngredientItem> ingredients;
     private String[] units;
 
+
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
         TextView amount, unit, ingredient;
+
+
 
 
         public MyViewHolder(View view){
@@ -62,10 +66,12 @@ public class DisplayIngredientsListInRecipeAdapter extends RecyclerView.Adapter<
     @Override
     public void onBindViewHolder(@NonNull DisplayIngredientsListInRecipeAdapter.MyViewHolder holder, int position) {
 
+        DecimalFormat format = new DecimalFormat();
+        format.setDecimalSeparatorAlwaysShown(false);
 
         if(ingredients != null){
 
-            holder.amount.setText(String.valueOf(ingredients.get(position).getAmount()));
+            holder.amount.setText(String.valueOf(format.format(ingredients.get(position).getAmount())));
             holder.unit.setText(units[ingredients.get(position).getUnit()]);
             holder.ingredient.setText(ingredients.get(position).getIngredient());
 

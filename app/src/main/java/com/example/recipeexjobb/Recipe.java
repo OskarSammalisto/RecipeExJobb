@@ -31,7 +31,7 @@ public class Recipe {
 
     }
 
-    public Recipe(int image, String recipeTitle, String recipeDescription, String recipeIngredients,
+    public Recipe(int image, String recipeTitle, String recipeDescription,
                   String recipeInstructions, int category, List<IngredientItem> ingredientsList) {
         this.image = image;
         this.recipeTitle = recipeTitle;
