@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -189,7 +190,9 @@ public class MainActivity extends AppCompatActivity {
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "this would open the side menu", Toast.LENGTH_SHORT).show();
+                FirebaseAuth.getInstance().signOut();
+                intentLoginScreen();
+               // Toast.makeText(MainActivity.this, "this would open the side menu", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -224,13 +227,52 @@ public class MainActivity extends AppCompatActivity {
         return selectedRecipe;
     }
 
+    public void deleteRecipe(Recipe recipe){
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference stRef = storage.getReference().child("images/" +mAuth.getUid() +"/" +recipe.getRecipestorageID() + ".jpg");
+
+        stRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("delete", "image deleted");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("delete", "image not deleted");
+            }
+        });
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference collectionReference = db.collection("users").document(mAuth.getUid()).collection("Recipes");
+        collectionReference.document(recipe.getRecipestorageID()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("delete", "recipe deleted");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("delete", "recipe not deleted");
+            }
+        });
+
+
+        recipeList.remove(recipe);
+
+
+
+    }
+
 
     //Create a new recipe and add to Recipe List
-    public void createRecipe(String imageLocalUri, String title, String description, String instructions, int category, List<IngredientItem> ingredientItemList){
+    public void createRecipe(String imageLocalUri, String title, String description, String instructions,
+                             int category, List<IngredientItem> ingredientItemList, String  ovenHeat, String prepTime, String cookTime){
 
 
 
-        Recipe recipe = new Recipe(imageLocalUri, title, description, instructions, category, ingredientItemList);
+        Recipe recipe = new Recipe(imageLocalUri, title, description, instructions, category, ingredientItemList, ovenHeat, prepTime, cookTime);
         recipeList.add(recipe);
 
 
@@ -255,8 +297,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        FirebaseAuth.getInstance().signOut();
-        intentLoginScreen();
+
     }
 
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -42,6 +43,19 @@ public class DisplayRecipeFragment extends Fragment {
             }
         });
 
+        //delete recipe
+        ImageButton deleteButton = view.findViewById(R.id.deleteRecipe);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).deleteRecipe(recipe);
+                closeFragment();
+                Toast.makeText(getContext(), "Recipe Deleted", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
         //set recipe image
         ImageView image = view.findViewById(R.id.recipeImageView);
         try{
@@ -52,6 +66,15 @@ public class DisplayRecipeFragment extends Fragment {
         }
 
 
+        //fill in heat and time info
+        TextView ovenHeat = view.findViewById(R.id.displayOvenHeatTV);
+        ovenHeat.setText(recipe.getOvenHeat());
+
+        TextView prepTime = view.findViewById(R.id.displayPrepTimeTV);
+        prepTime.setText(recipe.getPrepTime());
+
+        TextView cookTime = view.findViewById(R.id.displayCookTimeTV);
+        cookTime.setText(recipe.getCookTime());
 
 
         //fill title text view

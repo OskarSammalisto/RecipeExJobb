@@ -3,6 +3,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimaryDark">
 
 <RelativeLayout
@@ -40,12 +41,104 @@
         android:src="@drawable/knight_sprite"
         android:layout_marginTop="100dp" />
 
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewSetHeatTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addRecipeImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="20dp">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/setOvenHeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/round_vignette_black_18dp"
+                android:background="@null"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
+
+            </ImageButton>
+
+            <TextView
+                android:id="@+id/setOvenHeatTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/setOvenHeat"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="200Oc">
+
+            </TextView>
+
+            <ImageButton
+                android:id="@+id/setPrepTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/round_restaurant_black_18dp"
+                android:background="@null"
+                android:layout_toEndOf="@id/setOvenHeatTV"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
+
+            </ImageButton>
+
+            <TextView
+                android:id="@+id/prepTimeTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/setPrepTime"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="45:20">
+
+            </TextView>
+
+            <ImageButton
+                android:id="@+id/setCookTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/round_schedule_black_18dp"
+                android:background="@null"
+                android:layout_toEndOf="@id/prepTimeTV"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp">
+
+            </ImageButton>
+
+            <TextView
+                android:id="@+id/cookTimeTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/setCookTime"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="45:20">
+
+            </TextView>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
     <TextView
         android:id="@+id/addRecipeTitle"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/addRecipeImage"
-        android:layout_marginTop="30dp"
+        android:layout_below="@id/cardViewSetHeatTime"
+        android:layout_marginTop="20dp"
         android:text="click to add title"
         android:layout_centerHorizontal="true" />
 

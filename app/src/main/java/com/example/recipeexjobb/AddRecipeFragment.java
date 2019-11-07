@@ -64,6 +64,16 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
    // private TextView recipeIngredients;
     private TextView recipeInstructions;
 
+    //oven and time settings
+    ImageButton ovenHeat;
+    TextView ovenHeatTV;
+
+    ImageButton prepTime;
+    TextView prepTimeTV;
+
+    ImageButton cookTime;
+    TextView cookTimeTV;
+
     //ArrayList for ingredients in new recipe
     List<IngredientItem> ingredientsList = new ArrayList<>();
 
@@ -186,12 +196,15 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
                     String description = recipeDescription.getText().toString();
                     // String ingredients = recipeIngredients.getText().toString();
                     String instructions = recipeInstructions.getText().toString();
+                    String ovenHeat = ovenHeatTV.getText().toString();
+                    String prepTime = prepTimeTV.getText().toString();
+                    String cookTime = cookTimeTV.getText().toString();
 
                     int category = categorySpinner.getSelectedItemPosition() -1;
 
 
 
-                    ((MainActivity) getActivity()).createRecipe(imageStorageUri, title, description, instructions, category, ingredientsList);
+                    ((MainActivity) getActivity()).createRecipe(imageStorageUri, title, description, instructions, category, ingredientsList, ovenHeat, prepTime, cookTime);
 
 
                     closeFragment();
@@ -206,6 +219,40 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
 
 
         //Click listeners to edit text in text views, opens up an edit text alert dialog.
+
+        //oven heat setting
+        ovenHeat = view.findViewById(R.id.setOvenHeat);
+        ovenHeatTV = view.findViewById(R.id.setOvenHeatTV);
+
+        ovenHeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setViewText(ovenHeatTV);
+            }
+        });
+
+        //prep time settings
+        prepTime = view.findViewById(R.id.setPrepTime);
+        prepTimeTV = view.findViewById(R.id.prepTimeTV);
+
+        prepTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setViewText(prepTimeTV);
+            }
+        });
+
+        //cook time settings
+        cookTime = view.findViewById(R.id.setCookTime);
+        cookTimeTV = view.findViewById(R.id.cookTimeTV);
+
+        cookTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setViewText(cookTimeTV);
+            }
+        });
+
 
         //Title View
         recipeTitle.setOnClickListener(new View.OnClickListener(){

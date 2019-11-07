@@ -17,6 +17,31 @@ public class Recipe {
     private List<IngredientItem> ingredientsList;
     private String recipestorageID;
     private String imageUri;
+    private String ovenHeat, prepTime, cookTime;
+
+    public String getOvenHeat() {
+        return ovenHeat;
+    }
+
+    public void setOvenHeat(String ovenHeat) {
+        this.ovenHeat = ovenHeat;
+    }
+
+    public String getPrepTime() {
+        return prepTime;
+    }
+
+    public void setPrepTime(String prepTime) {
+        this.prepTime = prepTime;
+    }
+
+    public String getCookTime() {
+        return cookTime;
+    }
+
+    public void setCookTime(String cookTime) {
+        this.cookTime = cookTime;
+    }
 
     public String getImageUri() {
         return imageUri;
@@ -43,7 +68,7 @@ public class Recipe {
     }
 
     public Recipe(String image, String recipeTitle, String recipeDescription,
-                  String recipeInstructions, int category, List<IngredientItem> ingredientsList) {
+                  String recipeInstructions, int category, List<IngredientItem> ingredientsList, String ovenHeat, String prepTime, String cookTime) {
         this.imageUri = image;
         this.recipeTitle = recipeTitle;
         this.recipeDescription = recipeDescription;
@@ -51,6 +76,9 @@ public class Recipe {
         this.recipeInstructions = recipeInstructions;
         this.recipeCategory = category;
         this.ingredientsList = ingredientsList;
+        this.ovenHeat = ovenHeat;
+        this.prepTime = prepTime;
+        this.cookTime = cookTime;
     }
 
     public int getImage() {
