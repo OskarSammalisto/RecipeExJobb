@@ -1,6 +1,8 @@
 package com.example.recipeexjobb;
 
 import android.content.Context;
+import android.content.RestrictionEntry;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +78,13 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
         holder.recipeTitle.setText(recipe.getRecipeTitle());
         holder.recipeDescription.setText(recipe.getRecipeDescription());
 
-        holder.recipeImage.setImageDrawable(context.getResources().getDrawable(recipe.getImage()));
+        try{
+            holder.recipeImage.setImageURI(Uri.parse(recipeList.get(position).getImageUri()));    //Drawable(context.getResources().getDrawable(recipe.getImage()));
+
+        }
+        catch (Exception e){
+            //TODO: set some other placeholder image instead.
+        }
 
 
     }
@@ -85,10 +93,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
     public int getItemCount() {
         return recipeList.size();
     }
-
-
-
-
 
 
 }

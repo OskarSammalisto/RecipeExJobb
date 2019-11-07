@@ -1,10 +1,12 @@
 package com.example.recipeexjobb;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -39,6 +41,18 @@ public class DisplayRecipeFragment extends Fragment {
                 closeFragment();
             }
         });
+
+        //set recipe image
+        ImageView image = view.findViewById(R.id.recipeImageView);
+        try{
+            image.setImageURI(Uri.parse(recipe.getImageUri()));
+        }
+        catch (Exception e){
+            //TODO: set some other placeholder image instead.
+        }
+
+
+
 
         //fill title text view
         TextView title = view.findViewById(R.id.recipeTitle);

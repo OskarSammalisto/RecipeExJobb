@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,7 +36,13 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,11 +77,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
+
         //instantiates fireBase auth
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
         fireStoreDb = FirebaseFirestore.getInstance();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user == null){
+            //go to login screen
+            intentLoginScreen();
+        }
 
         //instantiate recipe list if null
         if(recipeList == null){
@@ -90,8 +108,50 @@ public class MainActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if(task.isSuccessful()){
                         for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                            Recipe recipe = documentSnapshot.toObject(Recipe.class);
+                            final Recipe recipe = documentSnapshot.toObject(Recipe.class);
                             recipeList.add(recipe);
+
+
+                                File image = new File(Uri.parse(recipe.getImageUri()).getPath());
+
+                                Log.d("!!!1", "1");
+                                if(!image.exists()){
+                                    Log.d("!!!1", "2");
+
+                                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                                    StorageReference stRef = storage.getReference().child("images/" +mAuth.getUid() +"/" +recipe.getRecipestorageID() + ".jpg");
+
+                                    try {
+                                        final File localFile = File.createTempFile("images", "jpg");
+
+                                        stRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                Log.d("image download", "success");
+                                                Uri localFileUri = Uri.fromFile(localFile);
+                                                String uriString = localFileUri.toString();
+                                                recipe.setImageUri(uriString);
+
+
+
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d("image download", "unsuccessful");
+                                            }
+                                        });
+
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+
+
+
+                                }
+
+
                         }
 
                     }
@@ -135,11 +195,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        FirebaseUser user = mAuth.getCurrentUser();
-        if(user == null){
-            //go to login screen
-            intentLoginScreen();
-        }
+
 
 
         //Sets pager adapter to main activity view pager
@@ -170,11 +226,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Create a new recipe and add to Recipe List
-    public void createRecipe(String title, String description, String instructions, int category, List<IngredientItem> ingredientItemList){
+    public void createRecipe(String imageLocalUri, String title, String description, String instructions, int category, List<IngredientItem> ingredientItemList){
 
 
 
-        Recipe recipe = new Recipe(R.drawable.knight_sprite, title, description, instructions, category, ingredientItemList);
+        Recipe recipe = new Recipe(imageLocalUri, title, description, instructions, category, ingredientItemList);
         recipeList.add(recipe);
 
 
@@ -182,6 +238,8 @@ public class MainActivity extends AppCompatActivity {
         CollectionReference collectionReference = db.collection("users").document(mAuth.getUid()).collection("Recipes");
         collectionReference.document(recipe.setRecipestorageID()).set(recipe);
      //   myRef.child("users").child(mAuth.getUid()).child("recipes").setValue(recipeList);
+
+        uploadImage(Uri.parse(recipe.getImageUri()), recipe);
 
         Toast.makeText(MainActivity.this, "Recipe added to collection.", Toast.LENGTH_SHORT).show();
     }
@@ -256,6 +314,25 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return categoryArray[position];
         }
+    }
+
+    private void uploadImage(Uri uri, Recipe recipe){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference stRef = storage.getReference().child("images/" +mAuth.getUid() +"/" +recipe.getRecipestorageID() + ".jpg");
+
+        stRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("upload", "image Upload Success");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("upload", "image Upload Unsuccessful");
+            }
+        });
+
+
     }
 
 }

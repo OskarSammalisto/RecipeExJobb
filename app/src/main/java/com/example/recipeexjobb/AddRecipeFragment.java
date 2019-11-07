@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -57,14 +58,6 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
     //by taking a photo of the text and filling the appropriate text box automatically.
 
 
-
-    //Button variables
-    private ImageButton saveRecipeButton;
-    private ImageButton cancelButton;
-   // private ImageButton ingredientsFromImage;
-    private ImageButton instructionsFromImage;
-    private ImageButton ingredientsListFromImage;
-
     //text View variables
     private TextView recipeTitle;
     private TextView recipeDescription;
@@ -81,12 +74,15 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
     private int numberOfIngredients = 1;
 
 
+    //image view for recipe image
+    private ImageView imView;
+
+
+    //uri string for image storage location
+    private String imageStorageUri;
 
     //Current text Box that shall receive text from image to text api or from edit text
     private TextView imageToTextEditText;
-
-    //image view for recipe image
-    private ImageView imView;
 
     //File to save photo taken with camera
     private File photoFile;
@@ -108,7 +104,8 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
     private Spinner categorySpinner;
 
     //boolean to determine whether text is analyzed or returned as plain text
-    boolean imageToList = false;
+    private boolean imageToList = false;
+    private boolean imageToImageView = false;
 
 
 
@@ -137,13 +134,24 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
 
         //instantiate recipe image variable
         imView = view.findViewById(R.id.addRecipeImage);
+        imView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                imageToImageView = true;
+                dispatchTakePictureIntent();
+
+
+            }
+        });
 
         //instantiate button variables, text views and edit text
-        saveRecipeButton = view.findViewById(R.id.saveRecipe);
-        cancelButton = view.findViewById(R.id.exitAddRecipe);
-       // ingredientsFromImage = view.findViewById(R.id.cameraAddIngredients);
-        instructionsFromImage = view.findViewById(R.id.cameraAddInstructions);
-        ingredientsListFromImage = view.findViewById(R.id.cameraAddIngredientsAsList);
+        ImageButton saveRecipeButton = view.findViewById(R.id.saveRecipe);
+        ImageButton cancelButton = view.findViewById(R.id.exitAddRecipe);
+        // ingredientsFromImage = view.findViewById(R.id.cameraAddIngredients);
+        // private ImageButton ingredientsFromImage;
+        ImageButton instructionsFromImage = view.findViewById(R.id.cameraAddInstructions);
+        ImageButton ingredientsListFromImage = view.findViewById(R.id.cameraAddIngredientsAsList);
 
         recipeTitle = view.findViewById(R.id.addRecipeTitle);
         recipeDescription = view.findViewById(R.id.addRecipeDescription);
@@ -167,21 +175,32 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
             @Override
             public void onClick(View v) {
 
-                //Save recipes in main activity recipe list
+                if(imageStorageUri == null){
+                    Toast.makeText(getContext(), "Don't Forget the Picture!", Toast.LENGTH_SHORT).show();
+                }
+                else {
 
-                String title = recipeTitle.getText().toString();
-                String description = recipeDescription.getText().toString();
-               // String ingredients = recipeIngredients.getText().toString();
-                String instructions = recipeInstructions.getText().toString();
+                    //Save recipes in main activity recipe list
 
-                int category = categorySpinner.getSelectedItemPosition() -1;
+                    String title = recipeTitle.getText().toString();
+                    String description = recipeDescription.getText().toString();
+                    // String ingredients = recipeIngredients.getText().toString();
+                    String instructions = recipeInstructions.getText().toString();
 
-
-
-                ((MainActivity) getActivity()).createRecipe(title, description, instructions, category, ingredientsList);
+                    int category = categorySpinner.getSelectedItemPosition() -1;
 
 
-                closeFragment();
+
+                    ((MainActivity) getActivity()).createRecipe(imageStorageUri, title, description, instructions, category, ingredientsList);
+
+
+                    closeFragment();
+
+
+                }
+
+
+
             }
         });
 
@@ -407,6 +426,12 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             // Create the File where the photo should go
+
+            if(photoFile != null){
+                photoFile.delete();
+            }
+
+
             photoFile = null;
             try {
                 photoFile = createImageFile();
@@ -440,8 +465,14 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
 
+                    if(imageToImageView){
+                        imageToImageView = false;
+                        saveRecipeImage(uri);
+                    }
+                    else {
+                        readTextInImage(bitmap);
+                    }
 
-                    readTextInImage(bitmap);
 
 
 
@@ -455,6 +486,13 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
 
 
         }
+    }
+
+    private void saveRecipeImage(Uri uri){
+
+        imView.setImageURI(uri);
+        imageStorageUri = uri.toString();
+
     }
 
 

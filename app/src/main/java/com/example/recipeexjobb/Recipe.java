@@ -1,5 +1,7 @@
 package com.example.recipeexjobb;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +16,15 @@ public class Recipe {
     private boolean onWeeksMenu;
     private List<IngredientItem> ingredientsList;
     private String recipestorageID;
+    private String imageUri;
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
 
     public String getRecipestorageID() {
         return recipestorageID;
@@ -31,9 +42,9 @@ public class Recipe {
 
     }
 
-    public Recipe(int image, String recipeTitle, String recipeDescription,
+    public Recipe(String image, String recipeTitle, String recipeDescription,
                   String recipeInstructions, int category, List<IngredientItem> ingredientsList) {
-        this.image = image;
+        this.imageUri = image;
         this.recipeTitle = recipeTitle;
         this.recipeDescription = recipeDescription;
         this.recipeIngredients = recipeIngredients;
