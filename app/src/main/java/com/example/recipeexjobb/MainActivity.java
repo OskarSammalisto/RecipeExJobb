@@ -235,9 +235,62 @@ public class MainActivity extends AppCompatActivity {
         collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if(task.isSuccessful()){
+                    if(task.isSuccessful() && task.getResult().size() > 0){
                         if(task.getResult().size() > recipeList.size()){
                             //for each check id and add missing
+                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                                final Recipe recipe = documentSnapshot.toObject(Recipe.class);
+                                    List<String> ids = new ArrayList<>();
+                                    for(Recipe recipe1 : recipeList){
+                                        ids.add(recipe1.getRecipestorageID());
+                                    }
+                                    if(!ids.contains(recipe.setRecipestorageID())){
+                                        recipeList.add(recipe);
+
+                                        File image = new File(Uri.parse(recipe.getImageUri()).getPath());
+
+                                        Log.d("!!!1", "1");
+                                        if(!image.exists()){
+                                            Log.d("!!!1", "2");
+
+                                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                                            StorageReference stRef = storage.getReference().child("images/" +mAuth.getUid() +"/" +recipe.getRecipestorageID() + ".jpg");
+
+                                            try {
+                                                final File localFile = File.createTempFile("images", "jpg");
+
+                                                stRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                        Log.d("image download", "success");
+                                                        Uri localFileUri = Uri.fromFile(localFile);
+                                                        String uriString = localFileUri.toString();
+                                                        recipe.setImageUri(uriString);
+
+
+
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.d("image download", "unsuccessful");
+                                                    }
+                                                });
+
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+
+
+
+
+                                        }
+
+
+                                    }
+
+                            }
+
                         }
                     }
             }
