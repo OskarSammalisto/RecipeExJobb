@@ -358,13 +358,12 @@ public class MainActivity extends AppCompatActivity {
 //                MediaStore.Images.ImageColumns.DATA + "=?" , new String[]{ recipe.getImageUri() });
 
 //        String dir = getFilesDir().getAbsolutePath();
-//        File image = new File(dir, recipe.getImageUri());
-//        boolean delete = image.delete();
-//        Log.d("delete file", "file deletion: " +delete);
+        File image = new File(Uri.parse(recipe.getImageUri()).getPath());
+        boolean delete = image.delete();
+        Log.d("delete file", "file deletion: " +delete);
+        //getContentResolver().delete(Uri.parse(recipe.getImageUri()), null, null);
 
-
-
-        //TODO: its not deleting the image from phone it seems
+        
 
         recipeList.remove(recipe);
         eventListener.refreshList();
