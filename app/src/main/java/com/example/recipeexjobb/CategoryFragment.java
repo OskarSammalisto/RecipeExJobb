@@ -97,6 +97,11 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
     @Override
     public void openRecipe(Recipe recipe) {
         ((MainActivity) getActivity()).openRecipe(recipe);
+
+    }
+
+    public void refreshList(){
+        recipeListAdapter.notifyDataSetChanged(); //TODO: run this when recipe list is updated
     }
 
 

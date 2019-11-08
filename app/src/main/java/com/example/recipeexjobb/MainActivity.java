@@ -9,10 +9,12 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -258,10 +260,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //File(recipe.getImageUri()).delete;
+//        File image = new File(recipe.getImageUri());
+//        image.delete();
+
+//        ContentResolver contentResolver = getContentResolver();
+//        contentResolver.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//                MediaStore.Images.ImageColumns.DATA + "=?" , new String[]{ recipe.getImageUri() });
+
+        //TODO: its not deleting the image from phone it seems
 
         recipeList.remove(recipe);
-
-
 
     }
 

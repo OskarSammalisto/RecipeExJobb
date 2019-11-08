@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,7 +41,9 @@ import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -174,6 +177,10 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(photoFile != null){
+                    photoFile.delete();
+                }
 
                 //Closes the fragment without saving
                 closeFragment();
@@ -511,16 +518,19 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
 
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+//                int file_size = Integer.parseInt(String.valueOf(photoFile.length()/1024));
+//                int bitmapSize = bitmap.getByteCount()/1024;
+//
+//                Log.d("sizes", "file: " + file_size + ". Bitmap: " +bitmapSize);
 
                     if(imageToImageView){
                         imageToImageView = false;
+
                         saveRecipeImage(uri);
                     }
                     else {
                         readTextInImage(bitmap);
                     }
-
-
 
 
             } catch (FileNotFoundException e) {
@@ -529,17 +539,61 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
                 e.printStackTrace();
             }
 
-
-
-
         }
     }
 
     private void saveRecipeImage(Uri uri){
 
+        photoFile = saveBitmapToFile(photoFile);
+
         imView.setImageURI(uri);
         imageStorageUri = uri.toString();
 
+    }
+
+
+    //reduces image size to avoid using up unnecessary storage space.
+    private File saveBitmapToFile(File file){
+        try {
+
+            // BitmapFactory options to downsize the image
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            o.inSampleSize = 6;
+            // factor of downsizing the image
+
+            FileInputStream inputStream = new FileInputStream(file);
+            //Bitmap selectedBitmap = null;
+            BitmapFactory.decodeStream(inputStream, null, o);
+            inputStream.close();
+
+            // The new size we want to scale to
+            final int REQUIRED_SIZE=35;
+
+            // Find the correct scale value. It should be the power of 2.
+            int scale = 1;
+            while(o.outWidth / scale / 2 >= REQUIRED_SIZE &&
+                    o.outHeight / scale / 2 >= REQUIRED_SIZE) {
+                scale *= 2;
+            }
+
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            inputStream = new FileInputStream(file);
+
+            Bitmap selectedBitmap = BitmapFactory.decodeStream(inputStream, null, o2);
+            inputStream.close();
+
+            // here i override the original image file
+            file.createNewFile();
+            FileOutputStream outputStream = new FileOutputStream(file);
+
+            selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 100 , outputStream);
+
+            return file;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 
