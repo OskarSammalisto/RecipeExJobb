@@ -21,7 +21,7 @@ public class AddIngredientAdapter extends RecyclerView.Adapter<AddIngredientAdap
     private Context context;
     private int numberOfIngredients;
     private List<IngredientItem> ingredientsList;
-    EventListener listener;
+    private EventListener listener;
 
     public interface EventListener{
         void removeIngredient(int position);

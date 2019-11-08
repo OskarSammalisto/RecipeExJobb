@@ -47,6 +47,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -72,7 +73,15 @@ public class MainActivity extends AppCompatActivity {
     //recipe that should be displayed in recipe fragment
     Recipe selectedRecipe;
 
+    ViewPager viewPager;
 
+
+    //event listener to refresh recipe list
+    EventListener eventListener;
+
+    public interface EventListener{
+        void  refreshList();
+    }
 
 
     @Override
@@ -167,7 +176,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
-
+        else {
+            checkRecipeListForNewRecipes();
+        }
 
 
 
@@ -204,10 +215,33 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Sets pager adapter to main activity view pager
-        ViewPager viewPager = findViewById(R.id.viewPager);
+        viewPager = findViewById(R.id.viewPager);
         adapterViewPager = new PagerAdapter(getSupportFragmentManager(), this);
         viewPager.setAdapter(adapterViewPager);
 
+
+    }
+
+    void setEvListener(EventListener listener){
+        this.eventListener = listener;
+    }
+
+    private void checkRecipeListForNewRecipes(){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference collectionReference = db.collection("users")
+                .document(mAuth.getUid()).collection("Recipes");
+
+        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if(task.isSuccessful()){
+                        if(task.getResult().size() > recipeList.size()){
+                            //for each check id and add missing
+                        }
+                    }
+            }
+        });
 
     }
 
@@ -230,6 +264,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void deleteRecipe(Recipe recipe){
+
+
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference stRef = storage.getReference().child("images/" +mAuth.getUid() +"/" +recipe.getRecipestorageID() + ".jpg");
@@ -268,9 +304,18 @@ public class MainActivity extends AppCompatActivity {
 //        contentResolver.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
 //                MediaStore.Images.ImageColumns.DATA + "=?" , new String[]{ recipe.getImageUri() });
 
+//        String dir = getFilesDir().getAbsolutePath();
+//        File image = new File(dir, recipe.getImageUri());
+//        boolean delete = image.delete();
+//        Log.d("delete file", "file deletion: " +delete);
+
+
+
         //TODO: its not deleting the image from phone it seems
 
         recipeList.remove(recipe);
+        eventListener.refreshList();
+        viewPager.setCurrentItem(7); //TODO: fix and remove
 
     }
 
@@ -284,6 +329,8 @@ public class MainActivity extends AppCompatActivity {
         Recipe recipe = new Recipe(imageLocalUri, title, description, instructions, category, ingredientItemList, ovenHeat, prepTime, cookTime);
         recipeList.add(recipe);
 
+        eventListener.refreshList();
+        viewPager.setCurrentItem(7); //TODO: fix and remove
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference collectionReference = db.collection("users").document(mAuth.getUid()).collection("Recipes");
@@ -323,6 +370,7 @@ public class MainActivity extends AppCompatActivity {
             super(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             context = nContext;
             categoryArray = context.getResources().getStringArray(R.array.menuTitleCategoryList);
+
         }
 
 

@@ -2,6 +2,7 @@ package com.example.recipeexjobb;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryFragment extends Fragment implements RecipeListAdapter.EventListener {
+public class CategoryFragment extends Fragment implements RecipeListAdapter.EventListener, MainActivity.EventListener {
 
     //name and number of tab
     private int page;
@@ -52,6 +53,8 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
 
         //gets the recipe list from main activity
         recipeList = ((MainActivity) getActivity()).getRecipeList();
+
+        ((MainActivity) getActivity()).setEvListener(this);
 
 
 
@@ -101,6 +104,7 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
     }
 
     public void refreshList(){
+        Log.d("!!!!", "refresh");
         recipeListAdapter.notifyDataSetChanged(); //TODO: run this when recipe list is updated
     }
 
