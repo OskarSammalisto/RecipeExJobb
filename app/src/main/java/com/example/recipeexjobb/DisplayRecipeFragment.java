@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class DisplayRecipeFragment extends Fragment {
 
     Recipe recipe;
+    ImageButton starButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +43,21 @@ public class DisplayRecipeFragment extends Fragment {
                 closeFragment();
             }
         });
+
+        starButton = view.findViewById(R.id.addToWeekMenu);
+        toggleStar();
+
+        starButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recipe.setOnWeeksMenu(!recipe.isOnWeeksMenu());
+                toggleStar();
+            }
+        });
+
+
+
+
 
         //delete recipe
         ImageButton deleteButton = view.findViewById(R.id.deleteRecipe);
@@ -104,6 +120,15 @@ public class DisplayRecipeFragment extends Fragment {
 
     private void closeFragment(){
         getFragmentManager().beginTransaction().remove(DisplayRecipeFragment.this).commit();
+    }
+
+    private void toggleStar(){
+        if(recipe.isOnWeeksMenu()){
+            starButton.setImageResource(R.drawable.round_star_black_18dp);
+        }
+        else {
+            starButton.setImageResource(R.drawable.round_star_border_black_18dp);
+        }
     }
 
 

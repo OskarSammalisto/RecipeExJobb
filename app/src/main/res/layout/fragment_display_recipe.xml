@@ -21,6 +21,17 @@
             android:layout_marginStart="20dp" />
 
         <ImageButton
+            android:id="@+id/addToWeekMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/round_star_border_black_18dp"
+            android:background="@null"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp">
+
+        </ImageButton>
+
+        <ImageButton
             android:id="@+id/deleteRecipe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
