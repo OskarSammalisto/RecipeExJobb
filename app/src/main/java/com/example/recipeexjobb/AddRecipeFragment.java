@@ -421,6 +421,7 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
 
     private void closeFragment(){
         getFragmentManager().beginTransaction().remove(AddRecipeFragment.this).commit();
+        ((MainActivity) getActivity()).newRecipeButton.setVisible(true);
     }
 
 

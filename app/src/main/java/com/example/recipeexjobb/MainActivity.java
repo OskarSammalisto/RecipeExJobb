@@ -70,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
     //event listener to refresh recipe list
     EventListener eventListener;
 
+    //add recipe menu button for enabling and disabling
+    MenuItem newRecipeButton;
+
     public interface EventListener{
         void  refreshList();
     }
@@ -180,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
 //        //instantiate button variables
 //        ImageButton addRecipeButton = findViewById(R.id.addRecipeButton);
 //        ImageButton menuButton = findViewById(R.id.menuButton);
@@ -223,6 +227,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
+        newRecipeButton = menu.findItem(R.id.newRecipe);
+        newRecipeButton.setVisible(true);
         return true;
     }
 
@@ -250,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.frameLayoutForRecipes, new AddRecipeFragment());
         ft.commit();
+        newRecipeButton.setVisible(false);
 
     }
 
@@ -402,6 +409,7 @@ public class MainActivity extends AppCompatActivity {
 
         Recipe recipe = new Recipe(imageLocalUri, title, description, instructions, category, ingredientItemList, ovenHeat, prepTime, cookTime);
         recipeList.add(recipe);
+
 
         eventListener.refreshList();
         viewPager.setCurrentItem(7); //TODO: fix and remove
