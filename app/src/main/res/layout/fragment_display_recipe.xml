@@ -43,6 +43,21 @@
 
         </ImageButton>
 
+        <TextView
+            android:id="@+id/recipeTitle"
+            android:text="Huevos Rancheros"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/addToWeekMenu"
+            android:layout_marginTop="30dp"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textAlignment="center">
+
+        </TextView>
+
 
         
         <ImageView
@@ -50,7 +65,8 @@
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="100dp">
+            android:layout_marginTop="30dp"
+            android:layout_below="@id/recipeTitle">
         </ImageView>
 
         <androidx.cardview.widget.CardView
@@ -144,45 +160,77 @@
 
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/recipeTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/cardViewDisplayHeatTime"
-            android:layout_marginTop="30dp">
 
-        </TextView>
 
         <TextView
             android:id="@+id/recipeDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/recipeTitle"
-            android:layout_marginTop="30dp">
+            android:layout_below="@id/cardViewDisplayHeatTime"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:text="add descririon to the thing my good friend and do it well akjflkajf öafjfaökf aöfsjakfö aösfjfaö afölkj"
+            android:textSize="18sp">
 
         </TextView>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/ingredientsListRecycleView"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/ingredientsCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
             android:layout_below="@id/recipeDescription"
-            android:layout_marginTop="30dp">
+            app:cardCornerRadius="10dp">
 
-        </androidx.recyclerview.widget.RecyclerView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/ingredientsListRecycleView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="10dp">
 
-        <TextView
-            android:id="@+id/recipeInstructions"
-            android:layout_width="wrap_content"
+            </androidx.recyclerview.widget.RecyclerView>
+
+
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/instructionsCardView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/ingredientsListRecycleView"
-            android:layout_marginTop="30dp">
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="30dp"
+            app:cardCornerRadius="10dp"
+            android:layout_below="@id/ingredientsCardView">
 
-        </TextView>
+
+            <TextView
+                android:id="@+id/recipeInstructions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="10dp"
+                android:textAlignment="center"
+                android:textSize="18sp">
+
+            </TextView>
+
+
+
+        </androidx.cardview.widget.CardView>
+
 
 
         
