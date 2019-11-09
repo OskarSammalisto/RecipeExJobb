@@ -2,27 +2,25 @@ package com.example.recipeexjobb;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.ContentResolver;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,11 +28,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -47,7 +42,6 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -63,16 +57,13 @@ public class MainActivity extends AppCompatActivity {
     //Adapter for fragment pager adapter
     FragmentPagerAdapter adapterViewPager;
 
-    //button variables
-    private ImageButton addRecipeButton;
-    private ImageButton menuButton;
-
     //Main Recipe List
     private List<Recipe> recipeList;
 
     //recipe that should be displayed in recipe fragment
     Recipe selectedRecipe;
 
+    //viewpager to change page in code
     ViewPager viewPager;
 
 
@@ -181,33 +172,40 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        //set up the app toolbar
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
-        //instantiate button variables
-        addRecipeButton = findViewById(R.id.addRecipeButton);
-        menuButton = findViewById(R.id.menuButton);
 
 
-        //On click listener for add recipe button
-        addRecipeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.frameLayoutForRecipes, new AddRecipeFragment());
-                ft.commit();
 
-            }
-        });
-
-        //on click listener for menu button
-        menuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                intentLoginScreen();
-               // Toast.makeText(MainActivity.this, "this would open the side menu", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        //instantiate button variables
+//        ImageButton addRecipeButton = findViewById(R.id.addRecipeButton);
+//        ImageButton menuButton = findViewById(R.id.menuButton);
+//
+//
+//        //On click listener for add recipe button
+//        addRecipeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//                ft.replace(R.id.frameLayoutForRecipes, new AddRecipeFragment());
+//                ft.commit();
+//
+//            }
+//        });
+//
+//        //on click listener for menu button
+//        menuButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FirebaseAuth.getInstance().signOut();
+//                intentLoginScreen();
+//               // Toast.makeText(MainActivity.this, "this would open the side menu", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
 
 
@@ -221,6 +219,40 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.newRecipe:
+                openCreateRecipeFragment();
+                return true;
+
+//            case R.id.action_favorite:
+//                // User chose the "Favorite" action, mark the current item
+//                // as a favorite...
+//                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    private void openCreateRecipeFragment(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frameLayoutForRecipes, new AddRecipeFragment());
+        ft.commit();
+
+    }
+
 
     void setEvListener(EventListener listener){
         this.eventListener = listener;
@@ -349,21 +381,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //File(recipe.getImageUri()).delete;
-//        File image = new File(recipe.getImageUri());
-//        image.delete();
 
-//        ContentResolver contentResolver = getContentResolver();
-//        contentResolver.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                MediaStore.Images.ImageColumns.DATA + "=?" , new String[]{ recipe.getImageUri() });
-
-//        String dir = getFilesDir().getAbsolutePath();
         File image = new File(Uri.parse(recipe.getImageUri()).getPath());
         boolean delete = image.delete();
         Log.d("delete file", "file deletion: " +delete);
-        //getContentResolver().delete(Uri.parse(recipe.getImageUri()), null, null);
 
-        
 
         recipeList.remove(recipe);
         eventListener.refreshList();

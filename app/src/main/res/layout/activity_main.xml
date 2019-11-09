@@ -6,49 +6,49 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-<!--    <android.support.v7.widget.Toolbar-->
-<!--        android:id="@+id/my_toolbar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="?attr/actionBarSize"-->
-<!--        android:background="?attr/colorPrimary"-->
-<!--        android:elevation="4dp"-->
-<!--        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"-->
-<!--        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>-->
-
-
-    <ImageButton
-        android:id="@+id/addRecipeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        android:src="@drawable/round_add_circle_outline_black_18"
-        android:background="@null">
-    </ImageButton>
-
-    <SearchView
-        android:id="@+id/searchRecipes"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_toEndOf="@id/menuButton"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="70dp"
-        android:layout_marginTop="15dp"
-        android:layout_alignEnd="@id/addRecipeButton">
-    </SearchView>
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <ImageButton
-        android:id="@+id/menuButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="25dp"
-        android:layout_marginStart="15dp"
-        android:src="@drawable/round_menu_black_18dp"
-        android:background="@null">
-    </ImageButton>
+
+<!--    <ImageButton-->
+<!--        android:id="@+id/addRecipeButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        android:layout_marginEnd="15dp"-->
+<!--        android:src="@drawable/round_add_circle_outline_black_18"-->
+<!--        android:background="@null">-->
+<!--    </ImageButton>-->
+
+<!--    <SearchView-->
+<!--        android:id="@+id/searchRecipes"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_toEndOf="@id/menuButton"-->
+<!--        android:layout_marginStart="20dp"-->
+<!--        android:layout_marginEnd="70dp"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        android:layout_alignEnd="@id/addRecipeButton">-->
+<!--    </SearchView>-->
+
+<!--    <ImageButton-->
+<!--        android:id="@+id/menuButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_marginTop="25dp"-->
+<!--        android:layout_marginStart="15dp"-->
+<!--        android:src="@drawable/round_menu_black_18dp"-->
+<!--        android:background="@null">-->
+<!--    </ImageButton>-->
 
 
 
@@ -56,7 +56,7 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/addRecipeButton"
+        android:layout_below="@id/my_toolbar"
         android:layout_marginTop="10dp">
 
         <androidx.viewpager.widget.PagerTabStrip
@@ -72,8 +72,10 @@
 
     <FrameLayout
         android:id="@+id/frameLayoutForRecipes"
+        android:layout_below="@id/my_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        ></FrameLayout>
+        android:layout_height="match_parent">
+        
+    </FrameLayout>
 
 </RelativeLayout>
