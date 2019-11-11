@@ -10,5 +10,27 @@
         >
     </item>
 
+    <item android:id="@+id/search"
+        android:title="Search..."
+        android:icon="@drawable/round_search_black_18dp"
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="android.widget.SearchView" />
+
+    <item
+        android:id="@+id/refresh"
+        android:icon="@drawable/round_refresh_black_18dp"
+        android:title="refresh"
+        app:showAsAction="ifRoom">
+
+    </item>
+
+    <item
+        android:id="@+id/signOut"
+        android:title="Sign Out"
+        app:showAsAction="never">
+    </item>
+
+
+
 
 </menu>
