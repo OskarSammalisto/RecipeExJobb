@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,10 +21,10 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
     private int page;
     private String category;
     private RecyclerView recyclerView;
-    private RecipeListAdapter recipeListAdapter;
+    public RecipeListAdapter recipeListAdapter;
 
-    List<Recipe> recipeList;
-    List<Recipe> categorizedList;
+    private List<Recipe> recipeList;
+   // List<Recipe> categorizedList;
 
     public CategoryFragment(){
         //empty public constructor
@@ -55,6 +56,8 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
         recipeList = ((MainActivity) getActivity()).getRecipeList();
 
         ((MainActivity) getActivity()).setEvListener(this);
+        ((MainActivity) getActivity()).fragments.add(this);
+
 
 
 
@@ -65,33 +68,9 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
 
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        categorizedList = new ArrayList<>();
 
-
-        //makes a list for the weeks recipes
-        if(page == 6){
-            for(Recipe recipe : recipeList){
-                if(recipe.isOnWeeksMenu()){
-                    categorizedList.add(recipe);
-                }
-            }
-        }
-
-        else if(page == 7){
-            categorizedList = recipeList;
-        }
-
-        //makes a list of recipes fitting the category
-        for(Recipe recipe : recipeList){
-            if(recipe.getRecipeCategory() == page){
-                categorizedList.add(recipe);
-            }
-        }
-
-
-        recipeListAdapter = new RecipeListAdapter(view.getContext(), categorizedList, this);
+        recipeListAdapter = new RecipeListAdapter(view.getContext(), recipeList, page, this);
         recyclerView.setAdapter(recipeListAdapter);
-
 
 
         return view;

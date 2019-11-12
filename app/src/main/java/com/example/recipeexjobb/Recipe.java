@@ -18,6 +18,15 @@ public class Recipe {
     private String recipestorageID;
     private String imageUri;
     private String ovenHeat, prepTime, cookTime;
+    private int hitCount;
+
+    public int getHitCount() {
+        return hitCount;
+    }
+
+    public void setHitCount(int hitCount) {
+        this.hitCount = hitCount;
+    }
 
     public String getOvenHeat() {
         return ovenHeat;
