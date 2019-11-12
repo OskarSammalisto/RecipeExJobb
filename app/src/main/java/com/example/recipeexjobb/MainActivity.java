@@ -7,9 +7,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 
@@ -65,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
     //Main Recipe List
     private List<Recipe> recipeList;
+   // public List<RecipeListAdapter> recipeListAdapters = new ArrayList<>();
+    public List<CategoryFragment> fragments = new ArrayList<>();
 
     //recipe that should be displayed in recipe fragment
     Recipe selectedRecipe;
@@ -78,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
 
     //add recipe menu button for enabling and disabling
     MenuItem newRecipeButton;
+
+    public SearchView searchView;
 
     public interface EventListener{
         void  refreshList();
@@ -165,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                         }
+                        redrawList();
 
                     }
                     else {
@@ -226,15 +234,33 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
         adapterViewPager = new PagerAdapter(getSupportFragmentManager(), this);
         viewPager.setAdapter(adapterViewPager);
+        viewPager.setOffscreenPageLimit(0);
+        //refreshRecipeListAdapter();
+
+
+    }
+
+    public void redrawList(){
+        viewPager.setAdapter(adapterViewPager);
+        for(CategoryFragment fragment : fragments){
+            fragment.refreshList();
+        }
 
         viewPager.setOffscreenPageLimit(0);
 
 
     }
 
-    public void addFragmentToList(CategoryFragment fragment){
-        fragmentList.add(fragment);
-    }
+
+        //    public void refreshRecipeListAdapter(){
+//        for(RecipeListAdapter adapter : recipeListAdapters){
+//            adapter.notifyDataSetChanged();
+//         //   Log.d("notify", "notify");
+//        }
+
+//     public void addFragmentToList(CategoryFragment fragment){
+//         fragmentList.add(fragment);
+//     }
 
 //    private void refreshFragments(){
 ////        for(CategoryFragment fragment : fragmentList){
@@ -242,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
 ////        }
 //
 //        fragmentList.get(viewPagerPosition).refreshList();
+
 //    }
 
     @Override
@@ -249,6 +276,38 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu, menu);
         newRecipeButton = menu.findItem(R.id.newRecipe);
         newRecipeButton.setVisible(true);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.action_search)
+                .getActionView();
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                for(CategoryFragment fragment: fragments ){
+
+                    fragment.recipeListAdapter.getFilter().filter(query);
+                }
+
+
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                for(CategoryFragment fragment: fragments ){
+
+                    fragment.recipeListAdapter.getFilter().filter(newText);
+                }
+
+                return false;
+            }
+        });
         return true;
     }
 
@@ -263,6 +322,9 @@ public class MainActivity extends AppCompatActivity {
                 intentLoginScreen();
                 return true;
 
+
+            case R.id.action_search:
+                return true;
 
 //            case R.id.action_favorite:
 //                // User chose the "Favorite" action, mark the current item
@@ -284,6 +346,7 @@ public class MainActivity extends AppCompatActivity {
         newRecipeButton.setVisible(false);
 
     }
+
 
 
     void setEvListener(EventListener listener){
@@ -420,9 +483,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         recipeList.remove(recipe);
+
+        redrawList();
+      //  refreshRecipeListAdapter();
+//        eventListener.refreshList();
+//        viewPager.setCurrentItem(7); //TODO: fix and remove
+
        // refreshFragments();
-        eventListener.refreshList();
-        viewPager.setCurrentItem(7); //TODO: fix and remove
+//         eventListener.refreshList();
+//         viewPager.setCurrentItem(7); //TODO: fix and remove
+
 
     }
 
@@ -435,9 +505,16 @@ public class MainActivity extends AppCompatActivity {
 
         Recipe recipe = new Recipe(imageLocalUri, title, description, instructions, category, ingredientItemList, ovenHeat, prepTime, cookTime);
         recipeList.add(recipe);
+        redrawList();
+
+
+       // refreshRecipeListAdapter();
+//        eventListener.refreshList();
+//        viewPager.setCurrentItem(7); //TODO: fix and remove
 
 
        // refreshFragments();
+
 
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -471,7 +548,7 @@ public class MainActivity extends AppCompatActivity {
 
     //pager adapter class
     public static class PagerAdapter extends FragmentPagerAdapter {
-            private static int NUM_ITEMS = 8;
+            private static int NUM_ITEMS = 3;
             private Context context;
             private static String[] categoryArray;
 
@@ -497,21 +574,21 @@ public class MainActivity extends AppCompatActivity {
 
             switch (position) {
                 case 0:
-                    return CategoryFragment.newInstance(0, "Meat");
+                    return CategoryFragment.newInstance(0, "Recipes");
                 case 1:
-                    return CategoryFragment.newInstance(1, "Fish");
+                    return CategoryFragment.newInstance(1, "Weeks Menu");
                 case 2:
-                    return CategoryFragment.newInstance(2, "Vegetarian");
-                case 3:
-                    return CategoryFragment.newInstance(3, "Dessert");
-                case 4:
-                    return CategoryFragment.newInstance(4, "Drink");
-                case 5:
-                    return CategoryFragment.newInstance(5, "Other");
-                case 6:
-                    return CategoryFragment.newInstance(6, "Weeks menu");
-                case 7:
-                    return CategoryFragment.newInstance(7, "All Recipes");
+                    return CategoryFragment.newInstance(2, "Favorites");
+//                case 3:
+//                    return CategoryFragment.newInstance(3, "Dessert");
+//                case 4:
+//                    return CategoryFragment.newInstance(4, "Drink");
+//                case 5:
+//                    return CategoryFragment.newInstance(5, "Other");
+//                case 6:
+//                    return CategoryFragment.newInstance(6, "Weeks menu");
+//                case 7:
+//                    return CategoryFragment.newInstance(7, "All Recipes");
 
 
                 default:

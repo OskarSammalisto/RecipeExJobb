@@ -10,14 +10,9 @@
     </string-array>
 
     <string-array name="menuTitleCategoryList">
-        <item>Meat</item>
-        <item>Fish</item>
-        <item>Vegetarian</item>
-        <item>Dessert</item>
-        <item>Drink</item>
-        <item>Other</item>
-        <item>Weeks Menu</item>
         <item>All Recipes</item>
+        <item>Weeks Menu</item>
+        <item>Favorites</item>
     </string-array>
 
     <string-array name="measurementUnits">
