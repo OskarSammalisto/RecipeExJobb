@@ -40,22 +40,31 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
                     searchFilteredList = filteredList;
                 } else{
                     final List<Recipe> tempSearchList = new ArrayList<>();
+
                     for(Recipe recipe : filteredList) {
-                        for (IngredientItem ingredientItem : recipe.getIngredientsList()) {
-                            Boolean contains = true;
-                            for(String searchString : searchArray){
-                                    if (!ingredientItem.getIngredient().toLowerCase().contains(searchString.toLowerCase())) {
-                                        contains = false;
+                        int searchStringCount = searchArray.length;
+                        int searchHits = 0;
+
+                        for (String searchString : searchArray) {
+
+                            for(IngredientItem ingredientItem : recipe.getIngredientsList()){
+
+
+                                    if (ingredientItem.getIngredient().toLowerCase().contains(searchString.toLowerCase())) {
+                                        searchHits ++;
+//                                        if(!tempSearchList.contains(recipe)){
+//                                            tempSearchList.add(recipe);
+//                                        }
 
                                     }
 
-
                             }
 
-                            if(contains){
+                        }
+                        if(searchStringCount == searchHits){
+                            if(!tempSearchList.contains(recipe)){
                                 tempSearchList.add(recipe);
                             }
-
                         }
 
                     }
