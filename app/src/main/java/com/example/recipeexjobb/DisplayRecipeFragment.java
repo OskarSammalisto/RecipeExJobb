@@ -52,6 +52,7 @@ public class DisplayRecipeFragment extends Fragment {
             public void onClick(View v) {
                 recipe.setOnWeeksMenu(!recipe.isOnWeeksMenu());
                 toggleStar();
+                ((MainActivity) getActivity()).redrawList();
             }
         });
 
@@ -129,6 +130,7 @@ public class DisplayRecipeFragment extends Fragment {
         else {
             starButton.setImageResource(R.drawable.round_star_border_black_18dp);
         }
+
     }
 
 
