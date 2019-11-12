@@ -4,6 +4,7 @@ package com.example.recipeexjobb;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
@@ -45,6 +46,7 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
+
         page = getArguments().getInt("someInt", 0);
         category = getArguments().getString("someString");
     }
@@ -55,8 +57,11 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
         //gets the recipe list from main activity
         recipeList = ((MainActivity) getActivity()).getRecipeList();
 
+
         ((MainActivity) getActivity()).setEvListener(this);
+
         ((MainActivity) getActivity()).fragments.add(this);
+
 
 
 
@@ -73,6 +78,7 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
         recyclerView.setAdapter(recipeListAdapter);
 
 
+
         return view;
     }
 
@@ -82,11 +88,53 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
 
     }
 
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item){
+//        switch (item.getItemId()) {
+//            case R.id.refresh:
+//                refreshList();
+//                return true;
+//
+//            default:
+//                // If we got here, the user's action was not recognized.
+//                // Invoke the superclass to handle it.
+//                return super.onOptionsItemSelected(item);
+//
+//        }
+//    }
+
     public void refreshList(){
-        Log.d("!!!!", "refresh");
+//
+//       Log.d("fragment refresh", "Page: " +page);
+////
+//        categorizedList.clear();
+//        recipeList = ((MainActivity) getActivity()).getRecipeList();
+//
+//
+//        //makes a list for the weeks recipes
+//        if(page == 6){
+//            for(Recipe recipe : recipeList){
+//                if(recipe.isOnWeeksMenu()){
+//                    categorizedList.add(recipe);
+//                }
+//            }
+//        }
+//
+//        else if(page == 7){
+//            categorizedList = recipeList;
+//        }
+//
+//        //makes a list of recipes fitting the category
+//        for(Recipe recipe : recipeList){
+//            if(recipe.getRecipeCategory() == page){
+//                categorizedList.add(recipe);
+//            }
+//        }
+
+
+   //     Log.d("!!!!", "refresh");
         recipeListAdapter.notifyDataSetChanged(); //TODO: run this when recipe list is updated
     }
-
 
 
 }

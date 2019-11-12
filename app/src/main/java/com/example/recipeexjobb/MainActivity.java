@@ -47,6 +47,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static androidx.viewpager.widget.PagerAdapter.POSITION_NONE;
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -59,6 +61,10 @@ public class MainActivity extends AppCompatActivity {
 
     //Adapter for fragment pager adapter
     FragmentPagerAdapter adapterViewPager;
+
+    List<CategoryFragment> fragmentList = new ArrayList<>();
+   // int viewPagerPosition;
+
 
     //Main Recipe List
     private List<Recipe> recipeList;
@@ -240,14 +246,29 @@ public class MainActivity extends AppCompatActivity {
             fragment.refreshList();
         }
 
+        viewPager.setOffscreenPageLimit(0);
+
 
     }
+
 
         //    public void refreshRecipeListAdapter(){
 //        for(RecipeListAdapter adapter : recipeListAdapters){
 //            adapter.notifyDataSetChanged();
 //         //   Log.d("notify", "notify");
 //        }
+
+//     public void addFragmentToList(CategoryFragment fragment){
+//         fragmentList.add(fragment);
+//     }
+
+//    private void refreshFragments(){
+////        for(CategoryFragment fragment : fragmentList){
+////            fragment.refreshList();
+////        }
+//
+//        fragmentList.get(viewPagerPosition).refreshList();
+
 //    }
 
     @Override
@@ -296,6 +317,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.newRecipe:
                 openCreateRecipeFragment();
                 return true;
+            case R.id.signOut:
+                FirebaseAuth.getInstance().signOut();
+                intentLoginScreen();
+                return true;
+
 
             case R.id.action_search:
                 return true;
@@ -457,10 +483,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         recipeList.remove(recipe);
+
         redrawList();
       //  refreshRecipeListAdapter();
 //        eventListener.refreshList();
 //        viewPager.setCurrentItem(7); //TODO: fix and remove
+
+       // refreshFragments();
+//         eventListener.refreshList();
+//         viewPager.setCurrentItem(7); //TODO: fix and remove
+
 
     }
 
@@ -475,9 +507,15 @@ public class MainActivity extends AppCompatActivity {
         recipeList.add(recipe);
         redrawList();
 
+
        // refreshRecipeListAdapter();
 //        eventListener.refreshList();
 //        viewPager.setCurrentItem(7); //TODO: fix and remove
+
+
+       // refreshFragments();
+
+
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference collectionReference = db.collection("users").document(mAuth.getUid()).collection("Recipes");
@@ -485,6 +523,9 @@ public class MainActivity extends AppCompatActivity {
      //   myRef.child("users").child(mAuth.getUid()).child("recipes").setValue(recipeList);
 
         uploadImage(Uri.parse(recipe.getImageUri()), recipe);
+
+        eventListener.refreshList();
+        viewPager.setCurrentItem(7); //TODO: fix and remove
 
         Toast.makeText(MainActivity.this, "Recipe added to collection.", Toast.LENGTH_SHORT).show();
     }
@@ -510,6 +551,7 @@ public class MainActivity extends AppCompatActivity {
             private static int NUM_ITEMS = 3;
             private Context context;
             private static String[] categoryArray;
+
 
 
 
@@ -579,5 +621,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 
 }

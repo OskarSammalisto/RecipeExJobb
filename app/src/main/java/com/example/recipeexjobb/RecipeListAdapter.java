@@ -107,7 +107,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
             recipeImage = view.findViewById(R.id.recipeImage);
             recipeTitle = view.findViewById(R.id.recipeTitle);
             recipeDescription = view.findViewById(R.id.recipeDescription);
-
         }
     }
 
@@ -191,6 +190,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
     public int getItemCount() {
         return searchFilteredList.size();
     }
+
 
 
 }
