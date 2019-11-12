@@ -111,6 +111,9 @@ public class Recipe {
     }
 
     public int getRecipeCategory() {
+        if(recipeCategory < 0){
+            return 5;
+        }
         return recipeCategory;
     }
 

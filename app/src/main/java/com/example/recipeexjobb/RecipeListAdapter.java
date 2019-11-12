@@ -2,6 +2,8 @@ package com.example.recipeexjobb;
 
 import android.content.Context;
 import android.content.RestrictionEntry;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
     private int page;
     private List<Recipe> filteredList = new ArrayList<>();
     private List<Recipe> searchFilteredList;
+    private TypedArray categoryIcons;
 
     @Override
     public Filter getFilter() {
@@ -45,8 +48,18 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
                         int searchStringCount = searchArray.length;
                         int searchHits = 0;
 
+
+
                         for (String searchString : searchArray) {
 
+                            //see if search matches recipe name
+                            if(recipe.getRecipeTitle().toLowerCase().contains(searchString)){
+                                searchHits++;
+                                continue;
+                            }
+
+
+                            //see if search matches any recipe ingredient
                             for(IngredientItem ingredientItem : recipe.getIngredientsList()){
 
 
@@ -61,6 +74,8 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
                             }
 
                         }
+
+                        //see if recipe gets a hit on all search words
                         if(searchStringCount == searchHits){
                             if(!tempSearchList.contains(recipe)){
                                 tempSearchList.add(recipe);
@@ -99,7 +114,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
 
-        ImageView recipeImage;
+        ImageView recipeImage, categoryIcon;
         TextView recipeTitle, recipeDescription;
         public MyViewHolder(View view){
             super(view);
@@ -114,6 +129,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
             });
 
             recipeImage = view.findViewById(R.id.recipeImage);
+            categoryIcon = view.findViewById(R.id.categoryIcon);
             recipeTitle = view.findViewById(R.id.recipeTitle);
             recipeDescription = view.findViewById(R.id.recipeDescription);
         }
@@ -127,6 +143,8 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
         this.context = context;
         this.listener = listener;
         this.page = page;
+
+        categoryIcons = context.getResources().obtainTypedArray(R.array.categoryIcons);
 
         if(page == 0){
             filteredList = recipes;
@@ -183,6 +201,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
 
         holder.recipeTitle.setText(recipe.getRecipeTitle());
         holder.recipeDescription.setText(recipe.getRecipeDescription());
+        holder.categoryIcon.setImageDrawable(categoryIcons.getDrawable(recipe.getRecipeCategory()));
+
+
 
         try{
             holder.recipeImage.setImageURI(Uri.parse(filteredList.get(position).getImageUri()));    //Drawable(context.getResources().getDrawable(recipe.getImage()));

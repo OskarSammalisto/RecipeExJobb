@@ -234,7 +234,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
         adapterViewPager = new PagerAdapter(getSupportFragmentManager(), this);
         viewPager.setAdapter(adapterViewPager);
-        viewPager.setOffscreenPageLimit(0);
         //refreshRecipeListAdapter();
 
 
@@ -245,8 +244,6 @@ public class MainActivity extends AppCompatActivity {
         for(CategoryFragment fragment : fragments){
             fragment.refreshList();
         }
-
-        viewPager.setOffscreenPageLimit(0);
 
 
     }
@@ -524,8 +521,8 @@ public class MainActivity extends AppCompatActivity {
 
         uploadImage(Uri.parse(recipe.getImageUri()), recipe);
 
-        eventListener.refreshList();
-        viewPager.setCurrentItem(7); //TODO: fix and remove
+        //eventListener.refreshList();
+
 
         Toast.makeText(MainActivity.this, "Recipe added to collection.", Toast.LENGTH_SHORT).show();
     }

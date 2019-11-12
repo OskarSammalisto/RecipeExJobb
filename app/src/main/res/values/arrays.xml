@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer-array name="categoryIcons">
+        <item>@drawable/meat</item>
+        <item>@drawable/fish</item>
+        <item>@drawable/veg</item>
+        <item>@drawable/cake</item>
+        <item>@drawable/pitcher</item>
+        <item>@drawable/misc</item>
+
+    </integer-array>
+
+
+
+
+
+</resources>
