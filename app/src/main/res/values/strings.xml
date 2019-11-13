@@ -9,6 +9,17 @@
         <item>Other</item>
     </string-array>
 
+    <string-array name="menuCategoryList">
+        <item>Meat</item>
+        <item>Fish</item>
+        <item>Vegetarian</item>
+        <item>Dessert</item>
+        <item>Drink</item>
+        <item>Other</item>
+    </string-array>
+
+
+
     <string-array name="menuTitleCategoryList">
         <item>All Recipes</item>
         <item>Weeks Menu</item>

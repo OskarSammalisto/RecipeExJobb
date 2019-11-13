@@ -1,9 +1,7 @@
 package com.example.recipeexjobb;
 
 import android.content.Context;
-import android.content.RestrictionEntry;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.EventListener;
 import java.util.List;
 
 
@@ -31,6 +26,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
     private List<Recipe> filteredList = new ArrayList<>();
     private List<Recipe> searchFilteredList;
     private TypedArray categoryIcons;
+    private String[] categories;
 
     @Override
     public Filter getFilter() {
@@ -45,6 +41,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
                     final List<Recipe> tempSearchList = new ArrayList<>();
 
                     for(Recipe recipe : filteredList) {
+
                         int searchStringCount = searchArray.length;
                         int searchHits = 0;
 
@@ -54,10 +51,17 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
 
                             //see if search matches recipe name
                             if(recipe.getRecipeTitle().toLowerCase().contains(searchString)){
-                                searchHits++;
-                                continue;
+
+                                    searchHits++;
+                                    continue;
+
+
                             }
 
+                           if(categories[recipe.getRecipeCategory()].toLowerCase().contains(searchString)){
+                               searchHits++;
+                               continue;
+                           }
 
                             //see if search matches any recipe ingredient
                             for(IngredientItem ingredientItem : recipe.getIngredientsList()){
@@ -65,10 +69,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
 
                                     if (ingredientItem.getIngredient().toLowerCase().contains(searchString.toLowerCase())) {
                                         searchHits ++;
-//                                        if(!tempSearchList.contains(recipe)){
-//                                            tempSearchList.add(recipe);
-//                                        }
-
+//
                                     }
 
                             }
@@ -123,7 +124,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
                 @Override
                 public void onClick(View v) {
 
-                    listener.openRecipe(recipeList.get(getAdapterPosition()));
+                    listener.openRecipe(searchFilteredList.get(getAdapterPosition()));
 
                 }
             });
@@ -145,6 +146,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
         this.page = page;
 
         categoryIcons = context.getResources().obtainTypedArray(R.array.categoryIcons);
+        categories = context.getResources().getStringArray(R.array.menuCategoryList);
 
         if(page == 0){
             filteredList = recipes;
@@ -154,15 +156,19 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
             for(Recipe recipe : recipes){
 
                 if(page == 1){
-                    filteredList = recipes;
-//                    if(recipe.isOnWeeksMenu()){
-//                        if(!filteredList.contains(recipe)){
-//                            filteredList.add(recipe);
-//                        }
-//                    }
+
+                    if(recipe.isOnWeeksMenu()){
+                        if(!filteredList.contains(recipe)){
+                            filteredList.add(recipe);
+                        }
+                    }
+                    else{
+                        filteredList.remove(recipe);
+                    }
+
                 }
                 else if(page == 2){
-                    if(recipe.isOnWeeksMenu()){
+                    if(recipe.isFavorite()){
                         if(!filteredList.contains(recipe)){
                             filteredList.add(recipe);
                         }
@@ -220,7 +226,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
     public int getItemCount() {
         return searchFilteredList.size();
     }
-
 
 
 }

@@ -14,6 +14,16 @@ public class Recipe {
     private String recipeInstructions;
     private int recipeCategory;
     private boolean onWeeksMenu;
+    private boolean favorite;
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
     private List<IngredientItem> ingredientsList;
     private String recipestorageID;
     private String imageUri;

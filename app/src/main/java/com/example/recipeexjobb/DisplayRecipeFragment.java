@@ -1,5 +1,7 @@
 package com.example.recipeexjobb;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,8 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class DisplayRecipeFragment extends Fragment {
 
-    Recipe recipe;
-    ImageButton starButton;
+    private Recipe recipe;
+    private ImageButton starButton;
+    private ImageButton weekButton;
+    private ImageView toggleWeekCheck;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,17 +48,34 @@ public class DisplayRecipeFragment extends Fragment {
             }
         });
 
-        starButton = view.findViewById(R.id.addToWeekMenu);
+        starButton = view.findViewById(R.id.addToFavorites);
         toggleStar();
 
         starButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recipe.setOnWeeksMenu(!recipe.isOnWeeksMenu());
+                recipe.setFavorite(!recipe.isFavorite());
                 toggleStar();
+                ((MainActivity) getActivity()).redrawList();
+
+
+            }
+        });
+
+        weekButton = view.findViewById(R.id.addToWeeksMenu);
+        toggleWeekCheck = view.findViewById(R.id.weekCheck);
+        toggleWeek();
+
+        weekButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recipe.setOnWeeksMenu(!recipe.isOnWeeksMenu());
+                toggleWeek();
                 ((MainActivity) getActivity()).redrawList();
             }
         });
+
+
 
 
 
@@ -65,9 +86,7 @@ public class DisplayRecipeFragment extends Fragment {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) getActivity()).deleteRecipe(recipe);
-                closeFragment();
-                Toast.makeText(getContext(), "Recipe Deleted", Toast.LENGTH_SHORT).show();
+                deleteButtonPressed();
 
             }
         });
@@ -124,18 +143,61 @@ public class DisplayRecipeFragment extends Fragment {
     }
 
     private void toggleStar(){
-        if(recipe.isOnWeeksMenu()){
+        if(recipe.isFavorite()){
             starButton.setImageResource(R.drawable.round_star_black_18dp);
+            
         }
         else {
             starButton.setImageResource(R.drawable.round_star_border_black_18dp);
+
         }
 
     }
 
+    private void deleteButtonPressed(){
+        AlertDialog.Builder deleteRecipeAlert = new AlertDialog.Builder(getContext());
+
+        deleteRecipeAlert.setTitle("Are You Sure You Want To Delete This Recipe?");
 
 
+        deleteRecipeAlert.setPositiveButton("Yes!", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               deleteRecipe();
 
+            }
+        });
+
+        deleteRecipeAlert.setNegativeButton("No!", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        deleteRecipeAlert.show();
+    }
+
+    private void deleteRecipe(){
+        ((MainActivity) getActivity()).deleteRecipe(recipe);
+        closeFragment();
+        Toast.makeText(getContext(), "Recipe Deleted", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void toggleWeek(){
+
+       if(recipe.isOnWeeksMenu()){
+           toggleWeekCheck.setVisibility(View.VISIBLE);
+
+       }
+       else {
+           toggleWeekCheck.setVisibility(View.INVISIBLE);
+
+       }
+
+
+    }
 
 
 

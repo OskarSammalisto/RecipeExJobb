@@ -2,18 +2,14 @@ package com.example.recipeexjobb;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class CategoryFragment extends Fragment implements RecipeListAdapter.EventListener, MainActivity.EventListener {
@@ -21,11 +17,8 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
     //name and number of tab
     private int page;
     private String category;
-    private RecyclerView recyclerView;
     public RecipeListAdapter recipeListAdapter;
 
-    private List<Recipe> recipeList;
-   // List<Recipe> categorizedList;
 
     public CategoryFragment(){
         //empty public constructor
@@ -55,7 +48,7 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         //gets the recipe list from main activity
-        recipeList = ((MainActivity) getActivity()).getRecipeList();
+        List<Recipe> recipeList = ((MainActivity) getActivity()).getRecipeList();
 
 
         ((MainActivity) getActivity()).setEvListener(this);
@@ -65,10 +58,8 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
 
 
 
-
-
         final View view = inflater.inflate(R.layout.fragment_category, container, false);
-        recyclerView = view.findViewById(R.id.recipeRecycleView);
+        RecyclerView recyclerView = view.findViewById(R.id.recipeRecycleView);
         recyclerView.setHasFixedSize(true);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -76,6 +67,8 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
 
         recipeListAdapter = new RecipeListAdapter(view.getContext(), recipeList, page, this);
         recyclerView.setAdapter(recipeListAdapter);
+
+
 
 
 
@@ -93,6 +86,7 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
 
         recipeListAdapter.notifyDataSetChanged(); //TODO: run this when recipe list is updated
     }
+
 
 
 }
