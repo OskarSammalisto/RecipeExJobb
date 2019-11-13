@@ -197,19 +197,19 @@
 
 
 
-        <TextView
-            android:id="@+id/recipeDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/cardViewDisplayHeatTime"
-            android:layout_marginTop="30dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp"
-            android:text="add descririon to the thing my good friend and do it well akjflkajf öafjfaökf aöfsjakfö aösfjfaö afölkj"
-            android:textSize="18sp">
+<!--        <TextView-->
+<!--            android:id="@+id/recipeDescription"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:layout_below="@id/cardViewDisplayHeatTime"-->
+<!--            android:layout_marginTop="30dp"-->
+<!--            android:layout_marginStart="50dp"-->
+<!--            android:layout_marginEnd="50dp"-->
+<!--            android:text="add descririon to the thing my good friend and do it well akjflkajf öafjfaökf aöfsjakfö aösfjfaö afölkj"-->
+<!--            android:textSize="18sp">-->
 
-        </TextView>
+<!--        </TextView>-->
 
         <androidx.cardview.widget.CardView
             android:id="@+id/ingredientsCardView"
@@ -218,7 +218,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
-            android:layout_below="@id/recipeDescription"
+            android:layout_below="@id/cardViewDisplayHeatTime"
             app:cardCornerRadius="10dp">
 
             <androidx.recyclerview.widget.RecyclerView

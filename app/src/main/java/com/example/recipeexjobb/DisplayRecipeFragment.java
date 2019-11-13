@@ -118,8 +118,8 @@ public class DisplayRecipeFragment extends Fragment {
         title.setText(recipe.getRecipeTitle());
 
         //fill description text view
-        TextView description = view.findViewById(R.id.recipeDescription);
-        description.setText(recipe.getRecipeDescription());
+//        TextView description = view.findViewById(R.id.recipeDescription);
+//        description.setText(recipe.getRecipeDescription());
 
         //fill recycle view with ingredients
         RecyclerView ingredientsList = view.findViewById(R.id.ingredientsListRecycleView);
@@ -145,7 +145,7 @@ public class DisplayRecipeFragment extends Fragment {
     private void toggleStar(){
         if(recipe.isFavorite()){
             starButton.setImageResource(R.drawable.round_star_black_18dp);
-            
+
         }
         else {
             starButton.setImageResource(R.drawable.round_star_border_black_18dp);

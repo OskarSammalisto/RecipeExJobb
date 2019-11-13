@@ -165,6 +165,7 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
         // private ImageButton ingredientsFromImage;
         ImageButton instructionsFromImage = view.findViewById(R.id.cameraAddInstructions);
         ImageButton ingredientsListFromImage = view.findViewById(R.id.cameraAddIngredientsAsList);
+        ImageButton descriptionFromImage = view.findViewById(R.id.cameraAddRecipeDescription);
 
         recipeTitle = view.findViewById(R.id.addRecipeTitle);
         recipeDescription = view.findViewById(R.id.addRecipeDescription);
@@ -340,6 +341,20 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
 //                dispatchTakePictureIntent();
 //            }
 //        });
+
+        descriptionFromImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!descriptionChanged){
+                    recipeDescription.setText("");
+                    descriptionChanged = true;
+                }
+
+
+                imageToTextEditText = recipeDescription;
+                dispatchTakePictureIntent();
+            }
+        });
 
         //button to read ingredients and analyze text to make a list of ingredients objects
         ingredientsListFromImage.setOnClickListener(new View.OnClickListener() {

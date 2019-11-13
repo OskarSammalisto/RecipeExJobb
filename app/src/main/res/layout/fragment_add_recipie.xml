@@ -152,6 +152,16 @@
 
     </androidx.appcompat.widget.AppCompatSpinner>
 
+    <ImageButton
+        android:id="@+id/cameraAddRecipeDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/addRecipeDescription"
+        android:layout_below="@id/categorySpinner"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/round_photo_camera_black_18dp"
+        android:background="@null" />
 
     <TextView
         android:id="@+id/addRecipeDescription"
@@ -168,6 +178,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/addRecipeDescription"
+        android:layout_marginTop="20dp"
         android:text="add an ingredient">
 
     </Button>
@@ -178,8 +189,8 @@
         android:layout_height="wrap_content"
         android:layout_toStartOf="@id/addIngredientButton"
         android:layout_below="@id/addRecipeDescription"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
         android:src="@drawable/round_photo_camera_black_18dp"
         android:background="@null" />
 
