@@ -194,38 +194,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
 
-
-
-
-
-//        //instantiate button variables
-//        ImageButton addRecipeButton = findViewById(R.id.addRecipeButton);
-//        ImageButton menuButton = findViewById(R.id.menuButton);
-//
-//
-//        //On click listener for add recipe button
-//        addRecipeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//                ft.replace(R.id.frameLayoutForRecipes, new AddRecipeFragment());
-//                ft.commit();
-//
-//            }
-//        });
-//
-//        //on click listener for menu button
-//        menuButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FirebaseAuth.getInstance().signOut();
-//                intentLoginScreen();
-//               // Toast.makeText(MainActivity.this, "this would open the side menu", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-
+        if(user.getDisplayName() != null){
+            setTitle(user.getDisplayName());
+        }
 
 
 

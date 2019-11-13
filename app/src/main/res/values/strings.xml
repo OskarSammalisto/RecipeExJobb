@@ -52,4 +52,5 @@
     <string name="sign_up">Sign Up</string>
     <string name="search_hint">Search Recipes</string>
     <string name="app_label">Recipe App</string>
+    <string name="username">username</string>
 </resources>

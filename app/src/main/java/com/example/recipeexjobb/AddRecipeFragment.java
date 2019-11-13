@@ -68,14 +68,14 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
     private TextView recipeInstructions;
 
     //oven and time settings
-    ImageButton ovenHeat;
-    TextView ovenHeatTV;
+    private ImageButton ovenHeat;
+    private TextView ovenHeatTV;
 
-    ImageButton prepTime;
-    TextView prepTimeTV;
+    private ImageButton prepTime;
+    private TextView prepTimeTV;
 
-    ImageButton cookTime;
-    TextView cookTimeTV;
+    private ImageButton cookTime;
+    private TextView cookTimeTV;
 
     //ArrayList for ingredients in new recipe
     List<IngredientItem> ingredientsList = new ArrayList<>();

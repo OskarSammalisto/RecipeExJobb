@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -25,10 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     //Edit texts
     private EditText emailView;
     private EditText passwordView;
-
-    //Buttons
-    private Button loginButton;
-    private Button signUpButton;
+    private EditText userNameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +45,21 @@ public class LoginActivity extends AppCompatActivity {
         //instantiate edit text and buttons for login and sign up
         emailView = findViewById(R.id.email);
         passwordView = findViewById(R.id.password);
-        signUpButton = findViewById(R.id.signUpButton);
-        loginButton = findViewById(R.id.loginButton);
+        userNameView = findViewById(R.id.username);
+
+        //Buttons
+        Button signUpButton = findViewById(R.id.signUpButton);
+        Button loginButton = findViewById(R.id.loginButton);
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String userEmail = emailView.getText().toString();
                 String userPassword = passwordView.getText().toString();
+                String username = userNameView.getText().toString();
 
-                if(userEmail.length() != 0 && userPassword.length() != 0){
-                    createUser(userEmail, userPassword);
+                if(userEmail.length() != 0 && userPassword.length() != 0 && username.length() != 0){
+                    createUser(userEmail, userPassword, username);
                 }
                 else {
                     Toast.makeText(LoginActivity.this, "Please fill in username and password", Toast.LENGTH_LONG).show();
@@ -90,13 +92,25 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void createUser(String userEmail, String userPassword) {
+    private void createUser(final String userEmail, String userPassword, final String username) {
         mAuth.createUserWithEmailAndPassword(userEmail, userPassword)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            intentMainActivity();
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(username).build();
+
+                            user.updateProfile(profileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        intentMainActivity();
+                                    }
+                                }
+                            });
+
                         }
                         else {
                             Log.d("sign up", "sign up failed");
