@@ -56,7 +56,8 @@ public class DisplayRecipeFragment extends Fragment {
             public void onClick(View v) {
                 recipe.setFavorite(!recipe.isFavorite());
                 toggleStar();
-                ((MainActivity) getActivity()).redrawList();
+                //((MainActivity) getActivity()).redrawList();
+                ((MainActivity) getActivity()).addRemoveFromFav(recipe);
 
 
             }
@@ -71,7 +72,8 @@ public class DisplayRecipeFragment extends Fragment {
             public void onClick(View v) {
                 recipe.setOnWeeksMenu(!recipe.isOnWeeksMenu());
                 toggleWeek();
-                ((MainActivity) getActivity()).redrawList();
+                //((MainActivity) getActivity()).redrawList();
+                ((MainActivity) getActivity()).addRemoveFromFav(recipe);
             }
         });
 

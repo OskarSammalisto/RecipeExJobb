@@ -3,6 +3,7 @@ package com.example.recipeexjobb;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -187,6 +188,17 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
 
     }
 
+    public void removeRecipe(Recipe recipe){
+
+
+        if(searchFilteredList.contains(recipe)){
+            searchFilteredList.remove(recipe);
+            notifyDataSetChanged();
+        }
+
+
+    }
+
 
 
     @NonNull
@@ -227,5 +239,50 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
         return searchFilteredList.size();
     }
 
+    public void addRemoveFav(Recipe recipe){
+       if(page == 1){
+           if(recipe.isOnWeeksMenu() && !searchFilteredList.contains(recipe)){
+               searchFilteredList.add(recipe);
+           }
+           else if(!recipe.isOnWeeksMenu() && searchFilteredList.contains(recipe)){
+               searchFilteredList.remove(recipe);
+           }
+       }
+       if(page == 2){
+           if(recipe.isFavorite() && !searchFilteredList.contains(recipe)){
+               searchFilteredList.add(recipe);
+           }
+           else if(!recipe.isFavorite() && searchFilteredList.contains(recipe)){
+               searchFilteredList.remove(recipe);
+           }
+
+       }
+
+       notifyDataSetChanged();
+
+    }
+
+    public void displayNewRecipe(Recipe recipe){
+        //filteredList.add(recipe);
+
+        if(page == 0){
+            if(!searchFilteredList.contains(recipe)){
+                searchFilteredList.add(recipe);
+            }
+        }
+        if(page == 1){
+            if(recipe.isOnWeeksMenu() && !searchFilteredList.contains(recipe)){
+                searchFilteredList.add(recipe);
+            }
+        }
+        if(page == 2){
+            if(recipe.isFavorite() && !searchFilteredList.contains(recipe)){
+                searchFilteredList.add(recipe);
+            }
+        }
+
+        notifyDataSetChanged();
+
+    }
 
 }

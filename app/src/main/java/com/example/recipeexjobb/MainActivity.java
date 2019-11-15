@@ -216,28 +216,29 @@ public class MainActivity extends AppCompatActivity {
             fragment.refreshList();
         }
 
+    }
+
+    public void addRemoveFromFav(Recipe recipe){
+        for(CategoryFragment fragment : fragments){
+          fragment.addRemoveFav(recipe);
+        }
+    }
+
+    public void removeRecipe(Recipe recipe){
+
+        for(CategoryFragment fragment : fragments){
+            fragment.removeRecipe(recipe);
+        }
+
 
     }
 
+    public void displayNewRecipe(Recipe recipe){
+        for(CategoryFragment fragment : fragments){
+           fragment.displayNewRecipe(recipe);
+        }
+    }
 
-        //    public void refreshRecipeListAdapter(){
-//        for(RecipeListAdapter adapter : recipeListAdapters){
-//            adapter.notifyDataSetChanged();
-//         //   Log.d("notify", "notify");
-//        }
-
-//     public void addFragmentToList(CategoryFragment fragment){
-//         fragmentList.add(fragment);
-//     }
-
-//    private void refreshFragments(){
-////        for(CategoryFragment fragment : fragmentList){
-////            fragment.refreshList();
-////        }
-//
-//        fragmentList.get(viewPagerPosition).refreshList();
-
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -450,16 +451,11 @@ public class MainActivity extends AppCompatActivity {
         Log.d("delete file", "file deletion: " +delete);
 
 
+        removeRecipe(recipe);
+
         recipeList.remove(recipe);
 
-        redrawList();
-      //  refreshRecipeListAdapter();
-//        eventListener.refreshList();
-//        viewPager.setCurrentItem(7); //TODO: fix and remove
-
-       // refreshFragments();
-//         eventListener.refreshList();
-//         viewPager.setCurrentItem(7); //TODO: fix and remove
+        //redrawList();
 
 
     }
@@ -473,15 +469,12 @@ public class MainActivity extends AppCompatActivity {
 
         Recipe recipe = new Recipe(imageLocalUri, title, description, instructions, category, ingredientItemList, ovenHeat, prepTime, cookTime);
         recipeList.add(recipe);
-        redrawList();
+       // redrawList();
+
+        displayNewRecipe(recipe);
 
 
-       // refreshRecipeListAdapter();
-//        eventListener.refreshList();
-//        viewPager.setCurrentItem(7); //TODO: fix and remove
 
-
-       // refreshFragments();
 
 
 

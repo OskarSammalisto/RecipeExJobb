@@ -2,6 +2,7 @@ package com.example.recipeexjobb;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,11 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
 
         ((MainActivity) getActivity()).setEvListener(this);
 
-        ((MainActivity) getActivity()).fragments.add(this);
+
+        if(!((MainActivity) getActivity()).fragments.contains(this)){
+            ((MainActivity) getActivity()).fragments.add(this);
+        }
+
 
 
 
@@ -85,6 +90,19 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
     public void refreshList(){
 
         recipeListAdapter.notifyDataSetChanged(); //TODO: run this when recipe list is updated
+        Log.d("refresh", "refreshed: " +page);
+    }
+
+    public void removeRecipe(Recipe recipe){
+        recipeListAdapter.removeRecipe(recipe);
+    }
+
+    public void addRemoveFav(Recipe recipe){
+        recipeListAdapter.addRemoveFav(recipe);
+    }
+
+    public void displayNewRecipe(Recipe recipe){
+        recipeListAdapter.displayNewRecipe(recipe);
     }
 
 
