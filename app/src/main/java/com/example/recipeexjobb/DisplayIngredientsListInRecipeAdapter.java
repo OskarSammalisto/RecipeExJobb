@@ -90,10 +90,11 @@ public class DisplayIngredientsListInRecipeAdapter extends RecyclerView.Adapter<
 
         DecimalFormat format = new DecimalFormat();
         format.setDecimalSeparatorAlwaysShown(false);
-
+        int i = 0;
 
         for(TextView tv : textViewList){
-            tv.setText(String.valueOf(format.format(Double.parseDouble(tv.getText().toString()) * multiplier)));
+            tv.setText(String.valueOf(format.format(ingredients.get(i).getAmount() * multiplier)));
+            i++;
         }
 
        // notifyDataSetChanged();

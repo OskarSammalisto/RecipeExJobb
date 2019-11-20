@@ -235,9 +235,15 @@ public class DisplayRecipeFragment extends Fragment {
         adjustIngredientsAlert.setPositiveButton("Multiply", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                int mp = Integer.parseInt(multiplier.getText().toString());
 
-                recipeAdapter.multiplyRecipe(mp);
+                try{
+                    int mp = Integer.parseInt(multiplier.getText().toString());
+
+                    recipeAdapter.multiplyRecipe(mp);
+                }catch (Exception e){
+                    Toast.makeText(getContext(), "You must select a multiplier!", Toast.LENGTH_SHORT).show();
+                }
+
                 //multiplyRecipe(mp);
             }
         });
