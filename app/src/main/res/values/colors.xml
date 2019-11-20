@@ -3,4 +3,22 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="vegetarian">#66bb6a</color>
+    <color name="meat">#8e0000</color>
+    <color name="fish">#90caf9</color>
+    <color name="dessert">#fffde7</color>
+    <color name="drink">#f8bbd0</color>
+    <color name="other">#e8eaf6</color>
+
+    <array name="categoryColors">
+        <item>@color/meat</item>
+        <item>@color/fish</item>
+        <item>@color/vegetarian</item>
+        <item>@color/dessert</item>
+        <item>@color/drink</item>
+        <item>@color/other</item>
+    </array>
+
+
 </resources>

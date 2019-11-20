@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DisplayIngredientsListInRecipeAdapter extends RecyclerView.Adapter<DisplayIngredientsListInRecipeAdapter.MyViewHolder> {
@@ -18,6 +19,7 @@ public class DisplayIngredientsListInRecipeAdapter extends RecyclerView.Adapter<
     private Context context;
     private List<IngredientItem> ingredients;
     private String[] units;
+    private List<TextView> textViewList = new ArrayList<>();
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
@@ -72,10 +74,29 @@ public class DisplayIngredientsListInRecipeAdapter extends RecyclerView.Adapter<
         if(ingredients != null){
 
             holder.amount.setText(String.valueOf(format.format(ingredients.get(position).getAmount())));
+            textViewList.add(holder.amount);
             holder.unit.setText(units[ingredients.get(position).getUnit()]);
             holder.ingredient.setText(ingredients.get(position).getIngredient());
 
         }
+    }
+
+//    public void updateIngredientsList(List<IngredientItem> ingredientItemList){
+//        this.ingredients = ingredientItemList;
+//        notifyDataSetChanged();
+//    }
+
+    public void multiplyRecipe(int multiplier){
+
+        DecimalFormat format = new DecimalFormat();
+        format.setDecimalSeparatorAlwaysShown(false);
+
+
+        for(TextView tv : textViewList){
+            tv.setText(String.valueOf(format.format(Double.parseDouble(tv.getText().toString()) * multiplier)));
+        }
+
+       // notifyDataSetChanged();
     }
 
     @Override

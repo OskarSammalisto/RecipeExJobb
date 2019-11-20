@@ -4,18 +4,24 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
 
 public class DisplayRecipeFragment extends Fragment {
 
@@ -23,6 +29,7 @@ public class DisplayRecipeFragment extends Fragment {
     private ImageButton starButton;
     private ImageButton weekButton;
     private ImageView toggleWeekCheck;
+    private DisplayIngredientsListInRecipeAdapter recipeAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +45,11 @@ public class DisplayRecipeFragment extends Fragment {
 
 
         recipe = ((MainActivity) getActivity()).getCurrentRecipe();
+
+        ScrollView backgroundView = view.findViewById(R.id.displayRecipeScrollView);
+        int[] backgroundColors = getActivity().getResources().getIntArray(R.array.categoryColors);
+
+        backgroundView.setBackgroundColor(backgroundColors[recipe.getRecipeCategory()]);
 
         //exit button
         ImageButton exitButton = view.findViewById(R.id.exitRecipe);
@@ -127,8 +139,17 @@ public class DisplayRecipeFragment extends Fragment {
         RecyclerView ingredientsList = view.findViewById(R.id.ingredientsListRecycleView);
         ingredientsList.setHasFixedSize(true);
         ingredientsList.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        DisplayIngredientsListInRecipeAdapter recipeAdapter = new DisplayIngredientsListInRecipeAdapter(view.getContext(), recipe);
+        recipeAdapter = new DisplayIngredientsListInRecipeAdapter(view.getContext(), recipe);
         ingredientsList.setAdapter(recipeAdapter);
+
+        CardView ingredientsCard = view.findViewById(R.id.ingredientsCardView);
+        ingredientsCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adjustIngredientsList();
+            }
+        });
+
 
 
         //fill instructions text view
@@ -197,6 +218,63 @@ public class DisplayRecipeFragment extends Fragment {
            toggleWeekCheck.setVisibility(View.INVISIBLE);
 
        }
+
+
+    }
+
+    private void adjustIngredientsList(){
+
+        AlertDialog.Builder adjustIngredientsAlert = new AlertDialog.Builder(getContext());
+
+        adjustIngredientsAlert.setTitle("What would you like to do?");
+
+        final EditText multiplier = new EditText(getContext());
+        multiplier.setInputType(InputType.TYPE_CLASS_NUMBER);
+        adjustIngredientsAlert.setView(multiplier);
+
+        adjustIngredientsAlert.setPositiveButton("Multiply", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int mp = Integer.parseInt(multiplier.getText().toString());
+
+                recipeAdapter.multiplyRecipe(mp);
+                //multiplyRecipe(mp);
+            }
+        });
+
+        adjustIngredientsAlert.setNeutralButton("Change Units", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                changeUnits();
+            }
+        });
+
+        adjustIngredientsAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        adjustIngredientsAlert.show();
+
+    }
+
+//    private void multiplyRecipe(double multiplier){
+//
+//
+//        List<IngredientItem> tempIngredientList = recipe.getIngredientsList();
+//
+//        for (IngredientItem ingredientItem : tempIngredientList){
+//            ingredientItem.setAmount(ingredientItem.getAmount() * multiplier);
+//        }
+//
+//        recipeAdapter.updateIngredientsList(tempIngredientList);
+//
+//    }
+
+    private void changeUnits(){
+
 
 
     }
