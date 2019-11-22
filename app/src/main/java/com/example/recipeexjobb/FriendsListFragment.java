@@ -38,11 +38,11 @@ public class FriendsListFragment extends Fragment {
         friendsList = ((MainActivity) getActivity()).getFriendsList();
 
 
-
+        //TODO: don't set adapters if lists are empty.
 
         //set adapter for friend requests
         RecyclerView friendRequestRW = view.findViewById(R.id.friendReqRW);
-        FriendsListAdapter friendReqAdapter = new FriendsListAdapter(getContext(), friendRequestList);
+        FriendsListAdapter friendReqAdapter = new FriendsListAdapter(getContext(), friendRequestList, false);
 
         friendRequestRW.setHasFixedSize(true);
         friendRequestRW.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -51,7 +51,7 @@ public class FriendsListFragment extends Fragment {
 
         //set adapter for existing friends list
         RecyclerView friendsRW = view.findViewById(R.id.friendsListRW);
-        FriendsListAdapter friendsListAdapter = new FriendsListAdapter(getContext(), friendsList);
+        FriendsListAdapter friendsListAdapter = new FriendsListAdapter(getContext(), friendsList, true);
 
         friendsRW.setHasFixedSize(true);
         friendsRW.setLayoutManager(new LinearLayoutManager(view.getContext()));

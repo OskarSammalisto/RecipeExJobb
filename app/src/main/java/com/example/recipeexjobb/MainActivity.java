@@ -205,6 +205,8 @@ public class MainActivity extends AppCompatActivity {
         ///check for friend requests
         updateFriendRequestList();
 
+        updateFriendsList();
+
 
         //set up the app toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -256,6 +258,72 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+    }
+
+    public void updateFriendsList(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference collectionReference = db.collection("users").document(mAuth.getUid()).collection("friends");
+
+        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document : task.getResult()){
+
+                        Map request = document.getData();
+                        String email = request.get("email").toString();
+                        List<String> friendsEmails = new ArrayList<>();
+
+                        for(Map friend : friendsList){
+                            friendsEmails.add(friend.get("email").toString());
+                        }
+
+                        if(!friendsEmails.contains(email)){
+                            friendsList.add(request);
+                        }
+
+
+                    }
+                }
+            }
+        });
+
+    }
+
+
+    public void addNewFriendToList(Map<String, Object> friendRequestMap, Boolean add){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        if(add){
+
+            Map<String, Object> myInfo = new HashMap<>();
+            myInfo.put("username", mAuth.getCurrentUser().getDisplayName());
+            myInfo.put("userID", mAuth.getUid());
+            myInfo.put("email", mAuth.getCurrentUser().getEmail());
+
+            friendsList.add(friendRequestMap);
+
+            CollectionReference myCollRef = db.collection("users").document(mAuth.getUid()).collection("friends");
+            myCollRef.document(friendRequestMap.get("userID").toString()).set(friendRequestMap);
+            //db.collection("users").document(mAuth.getUid()).collection("friends").add(friendRequestMap);
+
+
+            CollectionReference friendCollRef = db.collection("users").document(friendRequestMap.get("userID").toString()).collection("friends");
+            friendCollRef.document(mAuth.getUid()).set(myInfo);
+            //db.collection("users").document(friendRequestMap.get("userID").toString()).collection("friends").add(myInfo);
+
+
+        }
+
+
+        db.collection("friends")
+                .document(mAuth.getCurrentUser().getEmail())
+                .collection("friendRequests")
+                .document(friendRequestMap
+                        .get("email").toString() +" + " +mAuth.getCurrentUser().getEmail()).delete();
 
 
     }
@@ -424,6 +492,7 @@ public class MainActivity extends AppCompatActivity {
                             Map<String, Object> friendRequest = new HashMap<>();
                             friendRequest.put("username", mAuth.getCurrentUser().getDisplayName());
                             friendRequest.put("userID", mAuth.getUid());
+                            friendRequest.put("email", mAuth.getCurrentUser().getEmail());
 
                             collRef.document(mAuth.getCurrentUser().getEmail() + " + " +email).set(friendRequest);
 
@@ -662,7 +731,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
+            Fragment myFragment = getSupportFragmentManager().findFragmentById(R.id.frameLayoutForRecipes);
+            if(myFragment != null){
 
+                getSupportFragmentManager().beginTransaction().remove(myFragment).commit();
+
+            }
     }
 
 

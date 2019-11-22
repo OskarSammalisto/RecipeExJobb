@@ -1,6 +1,8 @@
 package com.example.recipeexjobb;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,15 +17,17 @@ import java.util.Map;
 
 public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.MyViewHolder> {
 
-    Context context;
-    List<Map> displayList;
+    private Context context;
+    private List<Map> displayList;
+    private Boolean isFriendsList;
 
 
 
 
-    public FriendsListAdapter(Context context, List<Map> list){
+    public FriendsListAdapter(Context context, List<Map> list, boolean isFriendsList){
         this.context = context;
         this.displayList = list;
+        this.isFriendsList = isFriendsList;
 
     }
 
@@ -63,9 +67,57 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
             super(view);
 
             friendName = view.findViewById(R.id.friendName);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(isFriendsList){
+                        //do friend thing
+                    }
+                    else {
+
+                        AlertDialog.Builder addFriendDialog = new AlertDialog.Builder(context);
+                        addFriendDialog.setTitle("Add " +displayList.get(getAdapterPosition()).get("username").toString() +" to friends list?");
+
+                        addFriendDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(context instanceof MainActivity){
+                                    ((MainActivity) context).addNewFriendToList(displayList.get(getAdapterPosition()), true);
+                                    displayList.remove(getAdapterPosition());
+                                    notifyDataSetChanged();
+
+                                }
+                            }
+                        }).setNeutralButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).setNegativeButton("Delete  Request", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((MainActivity) context).addNewFriendToList(displayList.get(getAdapterPosition()), false);
+                                displayList.remove(getAdapterPosition());
+                                notifyDataSetChanged();
+                            }
+                        });
+
+                        addFriendDialog.show();
+
+
+                    }
+                }
+            });
+
+
+
+
         }
 
 
 
     }
+
+
 }
