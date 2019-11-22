@@ -19,6 +19,13 @@
         >
     </item>
 
+    <item
+        android:id="@+id/addFriend"
+        android:icon="@drawable/round_person_add_black_18dp"
+        android:title="Add Friend"
+        app:showAsAction="ifRoom">
+    </item>
+
 <!--    <item android:id="@+id/search"-->
 <!--        android:title="Search..."-->
 <!--        android:icon="@drawable/round_search_black_18dp"-->

@@ -11,15 +11,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -31,6 +38,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
@@ -295,10 +303,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_search:
                 return true;
 
-//            case R.id.action_favorite:
-//                // User chose the "Favorite" action, mark the current item
-//                // as a favorite...
-//                return true;
+            case R.id.addFriend:
+                addFriend();
+                return true;
 
             default:
                 // If we got here, the user's action was not recognized.
@@ -314,6 +321,86 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
         newRecipeButton.setVisible(false);
 
+    }
+
+    private void addFriend(){
+
+        AlertDialog.Builder addFriendDialog = new AlertDialog.Builder(MainActivity.this);
+
+        addFriendDialog.setTitle("Please enter friends email address.");
+
+        final EditText emailEditText = new EditText(MainActivity.this);
+        emailEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+
+        addFriendDialog.setView(emailEditText);
+
+
+        addFriendDialog.setPositiveButton("Add Friend", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                final String email = emailEditText.getText().toString();
+
+                //check if email exists in database
+                boolean validEmail = isValidEmail(email);
+
+                if(validEmail){
+
+
+                mAuth.fetchSignInMethodsForEmail(email).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+
+                        boolean emailExists = !task.getResult().getSignInMethods().isEmpty();
+
+                        if(emailExists){
+                            //send friend request
+
+                            Toast.makeText(MainActivity.this
+                                    , "Email Exists"
+                                    , Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(MainActivity.this
+                                    , "Return to sender, address unknown"
+                                    , Toast.LENGTH_SHORT).show();
+                        }
+
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MainActivity.this
+                                , "Something went wrong, please try again."
+                                , Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                }
+
+                else {
+                    Toast.makeText(MainActivity.this
+                            , "invalid email entered."
+                            , Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        addFriendDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        addFriendDialog.show();
+
+    }
+
+    public static boolean isValidEmail(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
 
