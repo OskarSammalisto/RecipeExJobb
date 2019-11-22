@@ -8,10 +8,13 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +24,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DisplayRecipeFragment extends Fragment {
 
@@ -52,11 +60,11 @@ public class DisplayRecipeFragment extends Fragment {
         backgroundView.setBackgroundColor(backgroundColors[recipe.getRecipeCategory()]);
 
         //exit button
-        ImageButton exitButton = view.findViewById(R.id.exitRecipe);
-        exitButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton shareButton = view.findViewById(R.id.shareRecipe);
+        shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                closeFragment();
+               shareRecipe();
             }
         });
 
@@ -159,6 +167,91 @@ public class DisplayRecipeFragment extends Fragment {
 
 
         return view;
+    }
+
+    private void shareRecipe(){
+
+        AlertDialog.Builder shareRecipeAlert = new AlertDialog.Builder(getContext());
+
+        shareRecipeAlert.setTitle("Who would you like to share with?");
+
+        RecyclerView recyclerView = new RecyclerView(getContext());
+
+        recyclerView.setHasFixedSize(true);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        final List<Map> friends = ((MainActivity) getActivity()).getFriendsList();
+        final FriendsListAdapter friendsListAdapter = new FriendsListAdapter(getContext(), friends, true, true);
+
+        recyclerView.setAdapter(friendsListAdapter);
+
+        shareRecipeAlert.setView(recyclerView);
+
+
+
+//        Spinner spinner = new Spinner(getActivity());
+//
+//        List<Map> friends = ((MainActivity) getActivity()).getFriendsList();
+//        List<String> friendNames = new ArrayList<>();
+//
+//        for(Map map : friends){
+//            friendNames.add(map.get("username").toString());
+//        }
+
+
+
+        shareRecipeAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                    List<Integer> shareList = friendsListAdapter.getFriendsToShareWith();
+
+                    if(shareList != null && shareList.size() > 0){
+                        for(int index : shareList){
+                            sendRecipeToFriend(friends.get(index));
+                        }
+                        Toast.makeText(getContext(), "Recipe shared", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(getContext(), "Recipe not shared, something went wrong.", Toast.LENGTH_SHORT).show();
+                    }
+
+            }
+        });
+
+        shareRecipeAlert.setNeutralButton("Other", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //share to other apps
+            }
+        });
+
+        shareRecipeAlert.setNegativeButton("No!", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        shareRecipeAlert.show();
+
+
+
+    }
+
+    private void sendRecipeToFriend(Map friend){
+
+        // /users/{userId}/sharedRecipes/{title}
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference reference = db.collection("users")
+                .document(friend.get("userID").toString())
+                .collection("sharedRecipes");
+
+        reference.document(recipe.getRecipestorageID()).set(recipe);
+
+
+
     }
 
     private void closeFragment(){

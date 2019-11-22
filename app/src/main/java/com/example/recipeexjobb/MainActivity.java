@@ -336,6 +336,8 @@ public class MainActivity extends AppCompatActivity {
         return friendsList;
     }
 
+
+
     public void addRemoveFromFav(Recipe recipe){
         for(CategoryFragment fragment : fragments){
           fragment.addRemoveFav(recipe);

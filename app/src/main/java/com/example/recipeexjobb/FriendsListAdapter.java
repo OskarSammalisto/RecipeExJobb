@@ -4,14 +4,17 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,15 +23,17 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     private Context context;
     private List<Map> displayList;
     private Boolean isFriendsList;
+    private Boolean isSharing;
+    private SparseBooleanArray selectedFriends = new SparseBooleanArray();
 
 
 
 
-    public FriendsListAdapter(Context context, List<Map> list, boolean isFriendsList){
+    public FriendsListAdapter(Context context, List<Map> list, boolean isFriendsList, boolean isSharing){
         this.context = context;
         this.displayList = list;
         this.isFriendsList = isFriendsList;
-
+        this.isSharing = isSharing;
     }
 
 
@@ -49,6 +54,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
             String name = displayList.get(position).get("username").toString();
             holder.friendName.setText(name);
+            holder.backgroundLayout.setSelected(selectedFriends.get(position, false));
         }
 
     }
@@ -61,19 +67,37 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView friendName;
+        LinearLayout backgroundLayout;
 
         public MyViewHolder(View view) {
 
             super(view);
 
             friendName = view.findViewById(R.id.friendName);
+            backgroundLayout = view.findViewById(R.id.friendListLayout);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(isFriendsList){
+
+
+                    if(isFriendsList && !isSharing){
                         //do friend thing
                     }
+
+                    else if(isSharing){
+                            if(selectedFriends.get(getAdapterPosition(), false)){
+                                selectedFriends.delete(getAdapterPosition());
+                                backgroundLayout.setSelected(false);
+                            }
+                            else {
+                                selectedFriends.put(getAdapterPosition(), true);
+                                backgroundLayout.setSelected(true);
+                            }
+
+
+                    }
+
                     else {
 
                         AlertDialog.Builder addFriendDialog = new AlertDialog.Builder(context);
@@ -117,6 +141,19 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
 
 
+    }
+
+    public List<Integer> getFriendsToShareWith(){
+
+        List<Integer> temp = new ArrayList<>();
+
+        if(selectedFriends != null && selectedFriends.size() > 0){
+            for(int i = 0; i < selectedFriends.size(); i++){
+                temp.add(selectedFriends.keyAt(i));
+            }
+        }
+
+        return temp;
     }
 
 

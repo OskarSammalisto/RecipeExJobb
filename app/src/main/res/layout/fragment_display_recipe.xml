@@ -12,10 +12,10 @@
         android:layout_height="wrap_content">
 
         <ImageButton
-            android:id="@+id/exitRecipe"
+            android:id="@+id/shareRecipe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/round_keyboard_backspace_black_18dp"
+            android:src="@drawable/round_share_black_18dp"
             android:background="@null"
             android:layout_alignParentStart="true"
             android:layout_marginTop="20dp"

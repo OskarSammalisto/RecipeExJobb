@@ -42,7 +42,7 @@ public class FriendsListFragment extends Fragment {
 
         //set adapter for friend requests
         RecyclerView friendRequestRW = view.findViewById(R.id.friendReqRW);
-        FriendsListAdapter friendReqAdapter = new FriendsListAdapter(getContext(), friendRequestList, false);
+        FriendsListAdapter friendReqAdapter = new FriendsListAdapter(getContext(), friendRequestList, false, false);
 
         friendRequestRW.setHasFixedSize(true);
         friendRequestRW.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -51,12 +51,14 @@ public class FriendsListFragment extends Fragment {
 
         //set adapter for existing friends list
         RecyclerView friendsRW = view.findViewById(R.id.friendsListRW);
-        FriendsListAdapter friendsListAdapter = new FriendsListAdapter(getContext(), friendsList, true);
+        FriendsListAdapter friendsListAdapter = new FriendsListAdapter(getContext(), friendsList, true, false);
 
         friendsRW.setHasFixedSize(true);
         friendsRW.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         friendsRW.setAdapter(friendsListAdapter);
+
+
 
 
 
