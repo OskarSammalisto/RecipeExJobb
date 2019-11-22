@@ -53,7 +53,9 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static androidx.viewpager.widget.PagerAdapter.POSITION_NONE;
 
@@ -65,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference myRef;
     FirebaseFirestore fireStoreDb;
+
+    //lists of friend and requests
+    private List<Map> friendRequestsList = new ArrayList<>();
+    private List<Map> friendsList = new ArrayList<>();
 
 
     //Adapter for fragment pager adapter
@@ -196,6 +202,9 @@ public class MainActivity extends AppCompatActivity {
             checkRecipeListForNewRecipes();
         }
 
+        ///check for friend requests
+        updateFriendRequestList();
+
 
         //set up the app toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -224,6 +233,39 @@ public class MainActivity extends AppCompatActivity {
             fragment.refreshList();
         }
 
+    }
+
+    public void updateFriendRequestList(){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("friends")
+                .document(mAuth.getCurrentUser().getEmail())
+                .collection("friendRequests")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+
+                    for(QueryDocumentSnapshot document : task.getResult()){
+
+                        Map request = document.getData();
+                        friendRequestsList.add(request);
+
+                    }
+                }
+            }
+        });
+
+
+
+    }
+
+    public List<Map> getFriendRequestsList(){
+        return friendRequestsList;
+    }
+
+    public List<Map> getFriendsList(){
+        return friendsList;
     }
 
     public void addRemoveFromFav(Recipe recipe){
@@ -303,6 +345,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_search:
                 return true;
 
+            case R.id.friendsList:
+                openFriendsList();
+                return true;
+
             case R.id.addFriend:
                 addFriend();
                 return true;
@@ -321,6 +367,13 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
         newRecipeButton.setVisible(false);
 
+    }
+
+    private void openFriendsList(){
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frameLayoutForRecipes, new FriendsListFragment());
+        ft.commit();
     }
 
     private void addFriend(){
@@ -351,10 +404,30 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
 
+                        //check if user typed in a valid email address
                         boolean emailExists = !task.getResult().getSignInMethods().isEmpty();
 
-                        if(emailExists){
-                            //send friend request
+                        if(email.equals(mAuth.getCurrentUser().getEmail())){
+                            Toast.makeText(MainActivity.this
+                                    , "I assume you're already friend with yourself."
+                                    , Toast.LENGTH_SHORT).show();
+                        }
+
+                        else if(emailExists){
+
+                            //TODO: check if users are already friends.
+                            //send friend request in firestore
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            CollectionReference collRef = db.collection("friends")
+                                    .document(email).collection("friendRequests");
+
+                            Map<String, Object> friendRequest = new HashMap<>();
+                            friendRequest.put("username", mAuth.getCurrentUser().getDisplayName());
+                            friendRequest.put("userID", mAuth.getUid());
+
+                            collRef.document(mAuth.getCurrentUser().getEmail() + " + " +email).set(friendRequest);
+
+
 
                             Toast.makeText(MainActivity.this
                                     , "Email Exists"

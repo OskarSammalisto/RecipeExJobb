@@ -20,6 +20,14 @@
     </item>
 
     <item
+        android:id="@+id/friendsList"
+        android:icon="@drawable/round_person_black_18dp"
+        android:title="Friends List"
+        app:showAsAction="ifRoom">
+
+    </item>
+
+    <item
         android:id="@+id/addFriend"
         android:icon="@drawable/round_person_add_black_18dp"
         android:title="Add Friend"
