@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +19,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +46,7 @@ public class DisplayRecipeFragment extends Fragment {
     private ImageButton weekButton;
     private ImageView toggleWeekCheck;
     private DisplayIngredientsListInRecipeAdapter recipeAdapter;
+    private FirebaseAuth mAuth;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +62,7 @@ public class DisplayRecipeFragment extends Fragment {
 
 
         recipe = ((MainActivity) getActivity()).getCurrentRecipe();
+        mAuth = FirebaseAuth.getInstance();
 
         ScrollView backgroundView = view.findViewById(R.id.displayRecipeScrollView);
         int[] backgroundColors = getActivity().getResources().getIntArray(R.array.categoryColors);
@@ -243,12 +253,29 @@ public class DisplayRecipeFragment extends Fragment {
 
         // /users/{userId}/sharedRecipes/{title}
 
+        recipe.setSharedBy(mAuth.getCurrentUser().getDisplayName());
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference reference = db.collection("users")
                 .document(friend.get("userID").toString())
                 .collection("sharedRecipes");
 
         reference.document(recipe.getRecipestorageID()).set(recipe);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference stRef = storage.getReference().child("images/" +friend.get("userID").toString() +"/" +recipe.getRecipestorageID() + ".jpg");
+
+        stRef.putFile(Uri.parse(recipe.getImageUri())).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("upload", "image Upload Success");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("upload", "image Upload Unsuccessful");
+            }
+        });
 
 
 

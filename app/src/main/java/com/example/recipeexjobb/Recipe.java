@@ -27,7 +27,16 @@ public class Recipe {
     private List<IngredientItem> ingredientsList;
     private String recipestorageID;
     private String imageUri;
-    private String ovenHeat, prepTime, cookTime;
+    private String ovenHeat, prepTime, cookTime, sharedBy;
+
+    public String getSharedBy() {
+        return sharedBy;
+    }
+
+    public void setSharedBy(String sharedBy) {
+        this.sharedBy = sharedBy;
+    }
+
     private int hitCount;
 
     public int getHitCount() {
@@ -74,12 +83,21 @@ public class Recipe {
         return recipestorageID;
     }
 
-    public String setRecipestorageID(){
+    public void setRecipestorageID(String id){
+
+        this.recipestorageID = id;
+//        long tsLong = System.currentTimeMillis()/1000;
+//        this.recipestorageID = Long.toString(tsLong);
+//
+//        return recipestorageID;
+
+    }
+
+    public String generateStorageId(){
         long tsLong = System.currentTimeMillis()/1000;
         this.recipestorageID = Long.toString(tsLong);
 
         return recipestorageID;
-
     }
 
     public Recipe(){

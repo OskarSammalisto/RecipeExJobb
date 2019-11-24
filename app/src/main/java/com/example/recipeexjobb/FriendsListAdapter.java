@@ -8,11 +8,15 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.common.SignInButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,11 +54,42 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
+        List<Recipe> shared = ((MainActivity) context).getSharedRecipeList();
+        List<String> usernames = new ArrayList<>();
+
+        for(Recipe recipe : shared){
+            usernames.add(recipe.getSharedBy());
+        }
+
+
         if(displayList != null){
 
             String name = displayList.get(position).get("username").toString();
             holder.friendName.setText(name);
             holder.backgroundLayout.setSelected(selectedFriends.get(position, false));
+
+            //String yes = "yes";
+
+            try{
+                if(usernames.contains(name)){  //displayList.get(position).get("sharing").equals(yes)
+                    selectedFriends.put(holder.getAdapterPosition(), true);
+                    holder.backgroundLayout.setSelected(true);
+                    Log.d("!!!!", "yes");
+                }
+                else {
+                    Log.d("!!!!", name +usernames.get(0));
+                }
+
+
+            }catch (Exception e){
+                Log.d("is sharing", "no such value");
+            }
+
+
+
+
+
+
         }
 
     }
@@ -82,7 +117,66 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
 
                     if(isFriendsList && !isSharing){
-                        //do friend thing
+
+                        if(selectedFriends.get(getAdapterPosition(), false)){
+                            AlertDialog.Builder sharedRecipesDialog = new AlertDialog.Builder(context);
+                            final String username = displayList.get(getAdapterPosition())
+                                    .get("username").toString();
+
+                            sharedRecipesDialog.setTitle( username +" Would like to share recipes with you.");
+
+                            List<Recipe> shared = ((MainActivity) context).getSharedRecipeList();
+
+                            final ArrayAdapter<String> recipeNames = new ArrayAdapter<>(context, android.R.layout.select_dialog_singlechoice);
+                                for(Recipe recipe : shared){
+                                    if(username.equals(recipe.getSharedBy())){
+                                        recipeNames.add(recipe.getRecipeTitle());
+                                    }
+                                }
+                            ListView listView = new ListView(context);
+
+                            listView.setAdapter(recipeNames);
+
+                            sharedRecipesDialog.setView(listView);
+
+                            sharedRecipesDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    ((MainActivity) context).saveSharedRecipes(username);
+
+                                    selectedFriends.delete(getAdapterPosition());
+                                    backgroundLayout.setSelected(false);
+                                }
+                            });
+
+                            sharedRecipesDialog.setNeutralButton("Later", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+
+                            sharedRecipesDialog.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    ((MainActivity) context).deleteSharedRecipes(username);
+
+                                    selectedFriends.delete(getAdapterPosition());
+                                    backgroundLayout.setSelected(false);
+                                }
+                            });
+
+                            sharedRecipesDialog.show();
+
+
+                        }
+
+//                        else {
+//                            //removing friend would go here
+//                        }
+
                     }
 
                     else if(isSharing){

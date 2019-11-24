@@ -38,7 +38,6 @@ public class FriendsListFragment extends Fragment {
         friendsList = ((MainActivity) getActivity()).getFriendsList();
 
 
-        //TODO: don't set adapters if lists are empty.
 
         //set adapter for friend requests
         RecyclerView friendRequestRW = view.findViewById(R.id.friendReqRW);

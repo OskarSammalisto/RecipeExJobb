@@ -43,6 +43,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
     //lists of friend and requests
     private List<Map> friendRequestsList = new ArrayList<>();
     private List<Map> friendsList = new ArrayList<>();
+    private List<Recipe> sharedRecipesList = new ArrayList<>();
+    boolean unsavedSharedRecipes;
 
 
     //Adapter for fragment pager adapter
@@ -190,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                     else {
-                        Log.d("load from fires tore", "Error getting documents: ", task.getException());
+                        Log.d("load from firestore", "Error getting documents: ", task.getException());
                     }
                 }
             });
@@ -206,6 +209,8 @@ public class MainActivity extends AppCompatActivity {
         updateFriendRequestList();
 
         updateFriendsList();
+
+        checkForSharedRecipes();
 
 
         //set up the app toolbar
@@ -571,7 +576,7 @@ public class MainActivity extends AppCompatActivity {
                                     for(Recipe recipe1 : recipeList){
                                         ids.add(recipe1.getRecipestorageID());
                                     }
-                                    if(!ids.contains(recipe.setRecipestorageID())){
+                                    if(!ids.contains(recipe.getRecipestorageID())){  //changed storage id here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                                         recipeList.add(recipe);
 
                                         File image = new File(Uri.parse(recipe.getImageUri()).getPath());
@@ -623,6 +628,175 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void checkForSharedRecipes(){
+
+
+
+        CollectionReference reference = fireStoreDb.collection("users")
+                .document(mAuth.getUid()).collection("sharedRecipes");
+
+        reference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+
+                    Log.d("Add shared", "read");
+                    List<String> ids = new ArrayList<>();
+                    for(Recipe recipe1 : sharedRecipesList){
+                        ids.add(recipe1.getRecipestorageID());
+                    }
+
+                    for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        final Recipe recipe = documentSnapshot.toObject(Recipe.class);
+
+
+                        if(!ids.contains(recipe.getRecipestorageID())){  //changed storage id here !!!!!!!!!!!!!!!!!!
+
+                        sharedRecipesList.add(recipe);
+                        Log.d("Add shared", "added");
+
+                        File image = new File(Uri.parse(recipe.getImageUri()).getPath());
+
+                        if(!image.exists()){
+
+                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                            StorageReference stRef = storage.getReference().child("images/" +mAuth.getUid() +"/" +recipe.getRecipestorageID() + ".jpg");
+
+                            try {
+                                final File localFile = File.createTempFile("images", "jpg");
+
+                                stRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                        Log.d("image download", "success");
+                                        Uri localFileUri = Uri.fromFile(localFile);
+                                        String uriString = localFileUri.toString();
+                                        recipe.setImageUri(uriString);
+
+
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d("image download", "unsuccessful");
+                                    }
+                                });
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+
+                        }
+
+                    }
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("check shared rec", "failed");
+            }
+        });
+
+        toggleUnsavedSharedRecipes();
+
+    }
+
+    public void toggleUnsavedSharedRecipes(){
+        unsavedSharedRecipes = sharedRecipesList.size() > 0;
+
+        List<String> friendNames = new ArrayList<>();
+
+        for(Recipe recipe : sharedRecipesList){
+            friendNames.add(recipe.getSharedBy());
+        }
+
+        for(Map friend : friendsList){
+            if(friendNames.contains(friend.get("username").toString())){
+                friend.put("sharing", "yes");
+            }
+            else {
+                friend.put("sharing", "no");
+            }
+
+        }
+
+    }
+
+    public void saveSharedRecipes(String friendsName){
+
+
+
+        for(Recipe recipe : sharedRecipesList){
+            if(friendsName.equals(recipe.getSharedBy())){
+
+                recipeList.add(recipe);
+                uploadRecipe(recipe, recipe.getRecipestorageID());
+               // sharedRecipesList.remove(recipe);
+            }
+        }
+
+        deleteSharedRecipes(friendsName);
+
+    }
+
+    public void deleteSharedRecipes(final String friendsName){
+
+        CollectionReference reference = fireStoreDb.collection("users")
+                .document(mAuth.getUid())
+                .collection("sharedRecipes");
+
+        Query sharedByUser = reference.whereEqualTo("sharedBy", friendsName);
+
+                sharedByUser.whereEqualTo("sharedBy", friendsName)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document : task.getResult()){
+
+                        String imageId = document.get("recipestorageID").toString();
+                        deleteCloudImage(imageId);
+
+                        document.getReference().delete();
+                    }
+//                    for(Recipe recipe : sharedRecipesList){
+//                        if(friendsName.equals(recipe.getSharedBy())){
+//
+//                            sharedRecipesList.remove(recipe);
+//
+//                        }
+//                    }
+
+
+                }
+            }
+        });
+
+        //reference.document(recipe.getRecipestorageID()).delete(); //
+
+
+
+//        CollectionReference reference = db.collection("users")
+//                .document(friend.get("userID").toString())
+//                .collection("sharedRecipes");
+//
+//        reference.document(recipe.getRecipestorageID()).set(recipe);
+
+
+    }
+
+
+
+    public boolean unsavedRecipesStatus(){
+        return unsavedSharedRecipes;
     }
 
     public void openRecipe(Recipe recipe){ //int index
@@ -705,16 +879,11 @@ public class MainActivity extends AppCompatActivity {
         displayNewRecipe(recipe);
 
 
+        String storageID = recipe.generateStorageId();   //changed storage id here !!!!!!!!!!!!!!!!!!
+        recipe.setRecipestorageID(storageID);
 
+        uploadRecipe(recipe, storageID);
 
-
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference collectionReference = db.collection("users").document(mAuth.getUid()).collection("Recipes");
-        collectionReference.document(recipe.setRecipestorageID()).set(recipe);
-     //   myRef.child("users").child(mAuth.getUid()).child("recipes").setValue(recipeList);
-
-        uploadImage(Uri.parse(recipe.getImageUri()), recipe);
 
         //eventListener.refreshList();
 
@@ -722,8 +891,32 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(MainActivity.this, "Recipe added to collection.", Toast.LENGTH_SHORT).show();
     }
 
+    private void uploadRecipe(Recipe recipe, String storageID){
+
+
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference collectionReference = db.collection("users").document(mAuth.getUid()).collection("Recipes");
+        collectionReference.document(storageID).set(recipe).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("upload fail", "exeption: " + e);
+            }
+        });
+        //   myRef.child("users").child(mAuth.getUid()).child("recipes").setValue(recipeList);
+
+        uploadImage(Uri.parse(recipe.getImageUri()), recipe);
+
+
+
+    }
+
     public List<Recipe> getRecipeList(){
         return recipeList;
+    }
+
+    public List<Recipe> getSharedRecipeList(){
+        return sharedRecipesList;
     }
 
     private void intentLoginScreen(){
@@ -817,6 +1010,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void deleteCloudImage(String id){
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference stRef = storage.getReference().child("images/" +mAuth.getUid() +"/" +id + ".jpg");
+
+        stRef.delete();
     }
 
 
