@@ -48,6 +48,9 @@ public class DisplayRecipeFragment extends Fragment {
     private DisplayIngredientsListInRecipeAdapter recipeAdapter;
     private FirebaseAuth mAuth;
 
+    private TextView title;
+    private TextView instructions;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,8 +149,16 @@ public class DisplayRecipeFragment extends Fragment {
 
 
         //fill title text view
-        TextView title = view.findViewById(R.id.recipeTitle);
+        title = view.findViewById(R.id.recipeTitle);
         title.setText(recipe.getRecipeTitle());
+
+        title.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                editViewText(title, 0);
+                return true;
+            }
+        });
 
         //fill description text view
 //        TextView description = view.findViewById(R.id.recipeDescription);
@@ -171,8 +182,16 @@ public class DisplayRecipeFragment extends Fragment {
 
 
         //fill instructions text view
-        TextView instructions = view.findViewById(R.id.recipeInstructions);
+        instructions = view.findViewById(R.id.recipeInstructions);
         instructions.setText(recipe.getRecipeInstructions());
+
+        instructions.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                editViewText(instructions, 1);
+                return true;
+            }
+        });
 
 
 
@@ -197,18 +216,6 @@ public class DisplayRecipeFragment extends Fragment {
         recyclerView.setAdapter(friendsListAdapter);
 
         shareRecipeAlert.setView(recyclerView);
-
-
-
-//        Spinner spinner = new Spinner(getActivity());
-//
-//        List<Map> friends = ((MainActivity) getActivity()).getFriendsList();
-//        List<String> friendNames = new ArrayList<>();
-//
-//        for(Map map : friends){
-//            friendNames.add(map.get("username").toString());
-//        }
-
 
 
         shareRecipeAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -387,9 +394,51 @@ public class DisplayRecipeFragment extends Fragment {
 
     }
 
+    //Open alert dialog to edit text in text views
+    private void editViewText(final TextView textView, int index){
 
-    private void changeUnits(){
+        final int i = index;
 
+        AlertDialog.Builder editTextPopup = new AlertDialog.Builder(getContext());
+
+        editTextPopup.setTitle("Text Editor");
+
+        final EditText titleInput = new EditText(getContext());
+        titleInput.setText(textView.getText());
+        editTextPopup.setView(titleInput);
+
+        editTextPopup.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                String text = titleInput.getText().toString();
+                textView.setText(titleInput.getText());
+
+                switch (i){
+                    case 0:
+                        recipe.setRecipeTitle(text);
+                        break;
+
+                    case 1:
+                        recipe.setRecipeInstructions(text);
+                        break;
+
+                }
+
+                ((MainActivity) getActivity()).uploadRecipe(recipe, recipe.getRecipestorageID());
+                ((MainActivity) getActivity()).redrawList();
+
+            }
+        });
+
+        editTextPopup.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        editTextPopup.show();
 
 
     }

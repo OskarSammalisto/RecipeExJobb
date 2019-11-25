@@ -479,10 +479,6 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
         editTextPopup.show();
 
 
-
-
-
-
     }
 
 
@@ -815,7 +811,7 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
         }
 
 
-        if(searchWord.equals("krydddmått")){
+        if(searchWord.equals("kryddmått")){
             return 7;
         }
         String[] comparisonArray = new String[]{"void", "kg", "hg", "g", "liter", "dl", "cl", "ml", "tbsp", "tsp", "pound", "ounce", "pint", "fl.oz", "cup"};

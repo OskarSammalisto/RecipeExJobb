@@ -891,7 +891,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(MainActivity.this, "Recipe added to collection.", Toast.LENGTH_SHORT).show();
     }
 
-    private void uploadRecipe(Recipe recipe, String storageID){
+    public void uploadRecipe(Recipe recipe, String storageID){
 
 
 
