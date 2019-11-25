@@ -5,7 +5,8 @@
 
     <TextView
         android:id="@+id/ingredientAmount"
-        android:layout_width="40dp"
+        android:layout_width="50dp"
+        android:maxLines="1"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:textSize="18sp">
@@ -14,7 +15,8 @@
 
     <TextView
         android:id="@+id/measurementUnit"
-        android:layout_width="35dp"
+        android:layout_width="50dp"
+        android:maxLines="1"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:textSize="18sp">

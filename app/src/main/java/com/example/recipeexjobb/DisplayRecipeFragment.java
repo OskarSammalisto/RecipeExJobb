@@ -349,7 +349,7 @@ public class DisplayRecipeFragment extends Fragment {
         adjustIngredientsAlert.setTitle("What would you like to do?");
 
         final EditText multiplier = new EditText(getContext());
-        multiplier.setInputType(InputType.TYPE_CLASS_NUMBER);
+        multiplier.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         adjustIngredientsAlert.setView(multiplier);
 
         adjustIngredientsAlert.setPositiveButton("Multiply", new DialogInterface.OnClickListener() {
@@ -357,10 +357,11 @@ public class DisplayRecipeFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
 
                 try{
-                    int mp = Integer.parseInt(multiplier.getText().toString());
+                    Double mp = Double.parseDouble(multiplier.getText().toString());
 
                     recipeAdapter.multiplyRecipe(mp);
                 }catch (Exception e){
+                    Log.d("double", "dbl ex: " +e);
                     Toast.makeText(getContext(), "You must select a multiplier!", Toast.LENGTH_SHORT).show();
                 }
 
@@ -371,7 +372,7 @@ public class DisplayRecipeFragment extends Fragment {
         adjustIngredientsAlert.setNeutralButton("Change Units", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                changeUnits();
+                recipeAdapter.changeUnits();
             }
         });
 
@@ -386,18 +387,6 @@ public class DisplayRecipeFragment extends Fragment {
 
     }
 
-//    private void multiplyRecipe(double multiplier){
-//
-//
-//        List<IngredientItem> tempIngredientList = recipe.getIngredientsList();
-//
-//        for (IngredientItem ingredientItem : tempIngredientList){
-//            ingredientItem.setAmount(ingredientItem.getAmount() * multiplier);
-//        }
-//
-//        recipeAdapter.updateIngredientsList(tempIngredientList);
-//
-//    }
 
     private void changeUnits(){
 

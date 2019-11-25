@@ -20,6 +20,8 @@ public class DisplayIngredientsListInRecipeAdapter extends RecyclerView.Adapter<
     private List<IngredientItem> ingredients;
     private String[] units;
     private List<TextView> textViewList = new ArrayList<>();
+    private boolean unitChanged = false;
+    private Double currentMultiplier = 1.0;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
@@ -71,14 +73,28 @@ public class DisplayIngredientsListInRecipeAdapter extends RecyclerView.Adapter<
         DecimalFormat format = new DecimalFormat();
         format.setDecimalSeparatorAlwaysShown(false);
 
+        textViewList.clear();
+
         if(ingredients != null){
 
-            holder.amount.setText(String.valueOf(format.format(ingredients.get(position).getAmount())));
+            String unitAmount = (unitChanged) ? String
+                    .valueOf(format.format(ingredients.get(position).getAltAmount()* currentMultiplier ))
+                    : String.valueOf(format.format(ingredients.get(position).getAmount()*currentMultiplier));
+
+            String ingrUnit = (unitChanged) ? units[ingredients.get(position).getAltUnit()]  : units[ingredients.get(position).getUnit()];
+
+
+            holder.amount.setText(unitAmount);
+
+
             textViewList.add(holder.amount);
-            holder.unit.setText(units[ingredients.get(position).getUnit()]);
+
+
+            holder.unit.setText(ingrUnit);
             holder.ingredient.setText(ingredients.get(position).getIngredient());
 
         }
+
     }
 
 //    public void updateIngredientsList(List<IngredientItem> ingredientItemList){
@@ -86,19 +102,32 @@ public class DisplayIngredientsListInRecipeAdapter extends RecyclerView.Adapter<
 //        notifyDataSetChanged();
 //    }
 
-    public void multiplyRecipe(int multiplier){
+    public void multiplyRecipe(Double multiplier){
 
-        DecimalFormat format = new DecimalFormat();
-        format.setDecimalSeparatorAlwaysShown(false);
-        int i = 0;
+        this.currentMultiplier = multiplier;
 
-        for(TextView tv : textViewList){
-            tv.setText(String.valueOf(format.format(ingredients.get(i).getAmount() * multiplier)));
-            i++;
-        }
+//        DecimalFormat format = new DecimalFormat();
+//        format.setDecimalSeparatorAlwaysShown(false);
+//        int i = 0;
+//
+//        for(TextView tv : textViewList){
+//            tv.setText(String.valueOf(format.format(ingredients.get(i).getAmount() * multiplier)));
+//            i++;
+//        }
 
-       // notifyDataSetChanged();
+        notifyDataSetChanged();
     }
+
+    public void changeUnits(){
+
+        unitChanged = !unitChanged;
+        notifyDataSetChanged();
+
+
+
+
+    }
+
 
     @Override
     public int getItemCount() {

@@ -28,20 +28,20 @@
 
     <string-array name="measurementUnits">
         <item>-</item>
-        <item>Kg</item>
+        <item>kg</item>
         <item>hg</item>
         <item>g</item>
-        <item>Litre</item>
+        <item>litre</item>
         <item>dl</item>
         <item>cl</item>
         <item>ml</item>
         <item>tbsp</item>
         <item>tsp</item>
-        <item>Pound</item>
-        <item>Ounce</item>
-        <item>Pint</item>
+        <item>lb</item>
+        <item>oz</item>
+        <item>pint</item>
         <item>fl.oz</item>
-        <item>cup</item>
+        <item>cups</item>
     </string-array>
 
 
