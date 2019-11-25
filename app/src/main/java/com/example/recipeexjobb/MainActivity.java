@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                                                 Uri localFileUri = Uri.fromFile(localFile);
                                                 String uriString = localFileUri.toString();
                                                 recipe.setImageUri(uriString);
-
+                                                redrawList();
 
 
                                             }
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                         }
-                        redrawList();
+
 
                     }
                     else {
@@ -930,6 +930,7 @@ public class MainActivity extends AppCompatActivity {
             if(myFragment != null){
 
                 getSupportFragmentManager().beginTransaction().remove(myFragment).commit();
+                newRecipeButton.setVisible(true);
 
             }
     }

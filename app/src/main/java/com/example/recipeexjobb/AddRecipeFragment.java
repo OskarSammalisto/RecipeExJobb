@@ -99,6 +99,8 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
 
     //File to save photo taken with camera
     private File photoFile;
+    private File imageFile;
+    private boolean takingPicture;
 
     //Constant used for the camera intent
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -152,6 +154,7 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
             public void onClick(View v) {
 
                 imageToImageView = true;
+                takingPicture = true;
                 dispatchTakePictureIntent();
 
 
@@ -350,7 +353,7 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
                     descriptionChanged = true;
                 }
 
-
+                takingPicture = false;
                 imageToTextEditText = recipeDescription;
                 dispatchTakePictureIntent();
             }
@@ -361,6 +364,7 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
             @Override
             public void onClick(View v) {
                 imageToList = true;
+                takingPicture = false;
                 dispatchTakePictureIntent();
             }
         });
@@ -378,6 +382,7 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
                 }
 
                 imageToTextEditText = recipeInstructions;
+                takingPicture = false;
                 dispatchTakePictureIntent();
                 //open camera and do stuff with image
             }
@@ -493,25 +498,59 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             // Create the File where the photo should go
 
-            if(photoFile != null){
-                photoFile.delete();
+            if(takingPicture){
+
+                if(imageFile != null){
+                    try {
+                        photoFile.delete();
+                    }catch (Exception e){
+                        Log.d("11111", "delete exception: " +e);
+                    }
+
+                }
+
+
+                imageFile = null;
+                try {
+                    imageFile = createImageFile();
+                } catch (IOException ex) {
+                    // Error occurred while creating the File
+                }
+                // Continue only if the File was successfully created
+                if (imageFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                            "com.example.recipeexjobb.provider",
+                            imageFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                }
+
+
+            }
+
+            else{
+                if(photoFile != null){
+                    photoFile.delete();
+                }
+
+
+                photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    // Error occurred while creating the File
+                }
+                // Continue only if the File was successfully created
+                if (photoFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                            "com.example.recipeexjobb.provider",
+                            photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                }
             }
 
 
-            photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(getActivity(),
-                        "com.example.recipeexjobb.provider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
         }
     }
 
@@ -524,7 +563,7 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
 //            Bitmap imageBitmap = (Bitmap) extras.get("data");
 //            imView.setImageBitmap(imageBitmap);
 
-            Uri uri = Uri.fromFile(photoFile);
+            Uri uri = (takingPicture) ? Uri.fromFile(imageFile) : Uri.fromFile(photoFile);
             Bitmap bitmap;
 
 
@@ -556,7 +595,7 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
 
     private void saveRecipeImage(Uri uri){
 
-        photoFile = saveBitmapToFile(photoFile);
+        imageFile = saveBitmapToFile(imageFile);
 
         imView.setImageURI(uri);
         imageStorageUri = uri.toString();

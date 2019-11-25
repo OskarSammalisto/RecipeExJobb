@@ -15,7 +15,7 @@
         android:id="@+id/newRecipe"
         android:icon="@drawable/round_add_circle_outline_black_18"
         android:title="Add Recipe"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         >
     </item>
 
