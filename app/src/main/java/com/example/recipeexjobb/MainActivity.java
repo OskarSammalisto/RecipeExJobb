@@ -1,6 +1,7 @@
 package com.example.recipeexjobb;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -32,6 +33,10 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,15 +46,23 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +74,12 @@ import java.util.Map;
 import static androidx.viewpager.widget.PagerAdapter.POSITION_NONE;
 
 public class MainActivity extends AppCompatActivity {
+
+    //sending notification
+    final private String FCM_API = "https://fcm.googleapis.com/fcm/send";
+    final private String serverKey = "key=" +BuildConfig.cmServerKey;
+    final private String contentType = "application/JSON";
+    final String TAG = "NOTIFICATION TAG";
 
 
     //All fireBase instances
@@ -74,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
     private List<Map> friendsList = new ArrayList<>();
     private List<Recipe> sharedRecipesList = new ArrayList<>();
     boolean unsavedSharedRecipes;
+
+    //share recipes and friend req ref and listeners
+    CollectionReference sharedRecipeRef;
+    private ListenerRegistration shareRecipeListener;
+    private ListenerRegistration friendReqListener;
 
 
     //Adapter for fragment pager adapter
@@ -115,18 +139,34 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
         //instantiates fireBase auth
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
         fireStoreDb = FirebaseFirestore.getInstance();
 
+
+
+
         FirebaseUser user = mAuth.getCurrentUser();
         if(user == null){
             //go to login screen
             intentLoginScreen();
         }
+
+
+        //register to cloud messaging topic
+        FirebaseMessaging.getInstance().subscribeToTopic(formatEmailForSub(mAuth.getCurrentUser().getEmail()))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "subscribed";
+                        if(!task.isSuccessful()){
+                            msg = "unsuccessful";
+                        }
+                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         //instantiate recipe list if null
         if(recipeList == null){
@@ -212,6 +252,8 @@ public class MainActivity extends AppCompatActivity {
 
         checkForSharedRecipes();
 
+        //sets listeners for firestore database updates
+       setFirestoreListeners();
 
         //set up the app toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -234,11 +276,55 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void setFirestoreListeners(){
+
+        //listen for changes in shared recipes
+        sharedRecipeRef = fireStoreDb.collection("users")
+                .document(mAuth.getUid()).collection("sharedRecipes");
+        shareRecipeListener = sharedRecipeRef.addSnapshotListener(MainActivity.this, new com.google.firebase.firestore.EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if(queryDocumentSnapshots != null &&queryDocumentSnapshots.size() > sharedRecipesList.size()){
+                    checkForSharedRecipes();
+                    Toast.makeText(MainActivity.this, "New recipes shared", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+
+        //listen for friend requests
+        CollectionReference friendRequestRef = fireStoreDb.collection("friends")
+                .document(mAuth.getCurrentUser().getEmail())
+                .collection("friendRequests");
+        friendReqListener = friendRequestRef.addSnapshotListener(MainActivity.this, new com.google.firebase.firestore.EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if(queryDocumentSnapshots != null && queryDocumentSnapshots.size() > friendRequestsList.size()){
+                    updateFriendRequestList();
+                    Toast.makeText(MainActivity.this, "New friend request", Toast.LENGTH_LONG).show();
+
+                }
+
+
+            }
+        });
+
+
+    }
+
+
     public void redrawList(){
         viewPager.setAdapter(adapterViewPager);
         for(CategoryFragment fragment : fragments){
             fragment.refreshList();
         }
+
+    }
+
+    private String formatEmailForSub(String mail){
+
+        return  mail.replace("@", "");
 
     }
 
@@ -412,6 +498,25 @@ public class MainActivity extends AppCompatActivity {
                 openCreateRecipeFragment();
                 return true;
             case R.id.signOut:
+
+
+                //unregister from firestore listeners
+                friendReqListener.remove();
+                shareRecipeListener.remove();
+
+
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(formatEmailForSub(mAuth.getCurrentUser().getEmail()))
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                String msg = "unsubbed";
+                                if (!task.isSuccessful()) {
+                                    msg = "unsub failed";
+                                }
+                                Log.d(TAG, msg);
+                                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                            }
+                        });
                 FirebaseAuth.getInstance().signOut();
                 intentLoginScreen();
                 return true;
@@ -503,11 +608,13 @@ public class MainActivity extends AppCompatActivity {
 
                             collRef.document(mAuth.getCurrentUser().getEmail() + " + " +email).set(friendRequest);
 
+                            sendNotification(email);
 
 
                             Toast.makeText(MainActivity.this
-                                    , "Email Exists"
+                                    , "Friend Request Sent."
                                     , Toast.LENGTH_SHORT).show();
+
                         }
                         else {
                             Toast.makeText(MainActivity.this
@@ -546,6 +653,55 @@ public class MainActivity extends AppCompatActivity {
 
         addFriendDialog.show();
 
+    }
+
+    public void sendNotification(String email){
+        Log.d("Sending", "1");
+       String TOPIC = "/topics/" +formatEmailForSub(email);
+       String NOTIFICATION_TITLE = "title";
+       String NOTIFICATION_MESSAGE = "message";
+
+        JSONObject notification = new JSONObject();
+        JSONObject notificationBody = new JSONObject();
+        try{
+            notificationBody.put("title", NOTIFICATION_TITLE);
+            notificationBody.put("message", NOTIFICATION_MESSAGE);
+
+            notification.put("to", TOPIC);
+            notification.put("data", notificationBody);
+        }catch (JSONException e) {
+            Log.e(TAG, "OnCreate: " +e.getMessage());
+        }
+
+        sendNote(notification);
+    }
+
+    private void sendNote(JSONObject notification){
+        Log.d("Sending", "2");
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(FCM_API, notification,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, "onResponse: " + response.toString());
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(MainActivity.this, "Request Error", Toast.LENGTH_SHORT).show();
+                        Log.i(TAG, "onErrorResponse: Didn't work.");
+                    }
+                }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", serverKey);
+                params.put("Content-Type", contentType);
+                return params;
+            }
+        };
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
     }
 
     public static boolean isValidEmail(CharSequence target) {
@@ -738,8 +894,9 @@ public class MainActivity extends AppCompatActivity {
 
                 recipeList.add(recipe);
                 uploadRecipe(recipe, recipe.getRecipestorageID());
-               // sharedRecipesList.remove(recipe);
+
             }
+            sharedRecipesList.remove(recipe);  //todo get this to work
         }
 
         deleteSharedRecipes(friendsName);
@@ -777,6 +934,13 @@ public class MainActivity extends AppCompatActivity {
 
 
                 }
+                for(Recipe recipe : sharedRecipesList){
+                        if(friendsName.equals(recipe.getSharedBy())){
+
+                            sharedRecipesList.remove(recipe);
+
+                        }
+                    }
             }
         });
 
@@ -920,6 +1084,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void intentLoginScreen(){
+
+
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
     }
@@ -935,6 +1101,34 @@ public class MainActivity extends AppCompatActivity {
             }
     }
 
+    @Override
+    public void onDestroy(){
+
+        super.onDestroy();
+
+        //unregister from firestore listeners
+        friendReqListener.remove();
+        shareRecipeListener.remove();
+
+    }
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
+
+        //unregister from firestore listeners
+        friendReqListener.remove();
+        shareRecipeListener.remove();
+
+    }
+
+    @Override
+    public void onResume() {
+
+
+        super.onResume();
+    }
 
 
     //pager adapter class
