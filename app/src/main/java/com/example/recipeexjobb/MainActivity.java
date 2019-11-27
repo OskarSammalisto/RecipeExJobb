@@ -284,7 +284,9 @@ public class MainActivity extends AppCompatActivity {
         shareRecipeListener = sharedRecipeRef.addSnapshotListener(MainActivity.this, new com.google.firebase.firestore.EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if(queryDocumentSnapshots != null &&queryDocumentSnapshots.size() > sharedRecipesList.size()){
+                if(queryDocumentSnapshots != null && queryDocumentSnapshots.size() > sharedRecipesList.size()
+                        || sharedRecipesList.size() == 0 && queryDocumentSnapshots != null   &&  queryDocumentSnapshots.size() > 0){
+
                     checkForSharedRecipes();
                     Toast.makeText(MainActivity.this, "New recipes shared", Toast.LENGTH_LONG).show();
                 }
@@ -300,7 +302,9 @@ public class MainActivity extends AppCompatActivity {
         friendReqListener = friendRequestRef.addSnapshotListener(MainActivity.this, new com.google.firebase.firestore.EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if(queryDocumentSnapshots != null && queryDocumentSnapshots.size() > friendRequestsList.size()){
+                if(queryDocumentSnapshots != null && queryDocumentSnapshots.size() > friendRequestsList.size()
+                        || friendRequestsList.size() == 0 && queryDocumentSnapshots != null   &&  queryDocumentSnapshots.size() > 0){
+
                     updateFriendRequestList();
                     Toast.makeText(MainActivity.this, "New friend request", Toast.LENGTH_LONG).show();
 
