@@ -4,19 +4,20 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorPrimary">
 
 <RelativeLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorPrimary"
+    >
 
     <ImageButton
         android:id="@+id/exitAddRecipe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/round_keyboard_backspace_black_18dp"
+        android:src="@drawable/round_close_black_18dp"
         android:background="@null"
         android:layout_alignParentStart="true"
         android:layout_marginTop="20dp"
@@ -35,10 +36,10 @@
 
     <ImageView
         android:id="@+id/addRecipeImage"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/knight_sprite"
+        android:src="@drawable/round_add_photo_alternate_black_48dp"
         android:layout_marginTop="100dp" />
 
 
@@ -74,7 +75,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:text="200Oc">
+                android:text="---°c">
 
             </TextView>
 
@@ -99,7 +100,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:text="45:20">
+                android:text="--:--">
 
             </TextView>
 
@@ -125,7 +126,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginEnd="10dp"
-                android:text="45:20">
+                android:text="--:--">
 
             </TextView>
 
@@ -142,6 +143,19 @@
         android:text="click to add title"
         android:layout_centerHorizontal="true" />
 
+    <ImageButton
+        android:id="@+id/cameraForAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/categorySpinner"
+        android:layout_below="@id/addRecipeTitle"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/round_photo_camera_black_18dp"
+        android:background="@null">
+
+    </ImageButton>
+
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/categorySpinner"
         android:layout_width="wrap_content"
@@ -152,16 +166,16 @@
 
     </androidx.appcompat.widget.AppCompatSpinner>
 
-    <ImageButton
-        android:id="@+id/cameraAddRecipeDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toStartOf="@id/addRecipeDescription"
-        android:layout_below="@id/categorySpinner"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="20dp"
-        android:src="@drawable/round_photo_camera_black_18dp"
-        android:background="@null" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/cameraAddRecipeDescription"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_toStartOf="@id/addRecipeDescription"-->
+<!--        android:layout_below="@id/categorySpinner"-->
+<!--        android:layout_marginTop="25dp"-->
+<!--        android:layout_marginEnd="20dp"-->
+<!--        android:src="@drawable/round_photo_camera_black_18dp"-->
+<!--        android:background="@null" />-->
 
     <TextView
         android:id="@+id/addRecipeDescription"
@@ -183,16 +197,16 @@
 
     </Button>
 
-    <ImageButton
-        android:id="@+id/cameraAddIngredientsAsList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toStartOf="@id/addIngredientButton"
-        android:layout_below="@id/addRecipeDescription"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="30dp"
-        android:src="@drawable/round_photo_camera_black_18dp"
-        android:background="@null" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/cameraAddIngredientsAsList"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_toStartOf="@id/addIngredientButton"-->
+<!--        android:layout_below="@id/addRecipeDescription"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        android:layout_marginEnd="30dp"-->
+<!--        android:src="@drawable/round_photo_camera_black_18dp"-->
+<!--        android:background="@null" />-->
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -205,26 +219,6 @@
     </androidx.recyclerview.widget.RecyclerView>
 
 
-<!--    <TextView-->
-<!--        android:id="@+id/addRecipeIngredients"-->
-<!--        android:layout_width="250dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@id/addItemRecycleView"-->
-<!--        android:layout_marginTop="30dp"-->
-<!--        android:text="click to add ingredients in plain text"-->
-<!--        android:layout_centerHorizontal="true" />-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/cameraAddIngredients"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_toStartOf="@id/addRecipeIngredients"-->
-<!--        android:layout_below="@id/addItemRecycleView"-->
-<!--        android:layout_marginTop="30dp"-->
-<!--        android:layout_marginEnd="20dp"-->
-<!--        android:src="@drawable/round_photo_camera_black_18dp"-->
-<!--        android:background="@null" />-->
-
     <TextView
         android:id="@+id/addRecipeInstructions"
         android:layout_width="250dp"
@@ -234,16 +228,16 @@
         android:text="click to add instructions"
         android:layout_centerHorizontal="true" />
 
-    <ImageButton
-        android:id="@+id/cameraAddInstructions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toStartOf="@id/addRecipeInstructions"
-        android:layout_below="@id/addItemRecycleView"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="20dp"
-        android:src="@drawable/round_photo_camera_black_18dp"
-        android:background="@null" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/cameraAddInstructions"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_toStartOf="@id/addRecipeInstructions"-->
+<!--        android:layout_below="@id/addItemRecycleView"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        android:layout_marginEnd="20dp"-->
+<!--        android:src="@drawable/round_photo_camera_black_18dp"-->
+<!--        android:background="@null" />-->
 
 
 </RelativeLayout>

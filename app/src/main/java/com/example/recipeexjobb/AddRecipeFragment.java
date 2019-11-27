@@ -2,6 +2,7 @@ package com.example.recipeexjobb;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,6 +14,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -20,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -122,20 +126,25 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
     private boolean imageToList = false;
     private boolean imageToImageView = false;
 
+    //Strings for camera popup menu
+    private String[] popupMenuStrings = new String[]{"Add Description", "Add Ingredients", "Add Instructions"};
+
+    private Context context;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
 
 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState){
 
-        View view = inflater.inflate(R.layout.fragment_add_recipie, container, false);
+        final View view = inflater.inflate(R.layout.fragment_add_recipie, container, false);
 
 
 
@@ -144,6 +153,8 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
         fillCategorySpinner();
 
 
+
+        context = getContext();
 
 
 
@@ -163,17 +174,90 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
 
         //instantiate button variables, text views and edit text
         ImageButton saveRecipeButton = view.findViewById(R.id.saveRecipe);
-        ImageButton cancelButton = view.findViewById(R.id.exitAddRecipe);
+        final ImageButton cancelButton = view.findViewById(R.id.exitAddRecipe);
         // ingredientsFromImage = view.findViewById(R.id.cameraAddIngredients);
         // private ImageButton ingredientsFromImage;
-        ImageButton instructionsFromImage = view.findViewById(R.id.cameraAddInstructions);
-        ImageButton ingredientsListFromImage = view.findViewById(R.id.cameraAddIngredientsAsList);
-        ImageButton descriptionFromImage = view.findViewById(R.id.cameraAddRecipeDescription);
+//        ImageButton instructionsFromImage = view.findViewById(R.id.cameraAddInstructions);
+//        ImageButton ingredientsListFromImage = view.findViewById(R.id.cameraAddIngredientsAsList);
+//        ImageButton descriptionFromImage = view.findViewById(R.id.cameraAddRecipeDescription);
 
         recipeTitle = view.findViewById(R.id.addRecipeTitle);
         recipeDescription = view.findViewById(R.id.addRecipeDescription);
        // recipeIngredients = view.findViewById(R.id.addRecipeIngredients);
         recipeInstructions = view.findViewById(R.id.addRecipeInstructions);
+
+
+        //one camera button to rule all camera buttons, one button to bind them to a single menu.
+        final ImageButton imageToTextButton = view.findViewById(R.id.cameraForAll);
+
+        imageToTextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                PopupMenu popupMenu = new PopupMenu(getContext(), imageToTextButton);
+                MenuInflater menuInflater = popupMenu.getMenuInflater();
+
+                for (String string : popupMenuStrings){
+                    popupMenu.getMenu().add(string);
+                }
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        switch (item.getTitle().toString()){
+
+                            case "Add Description":
+
+                                if(!descriptionChanged){
+                                    recipeDescription.setText("");
+                                    descriptionChanged = true;
+                                }
+
+                                takingPicture = false;
+                                imageToTextEditText = recipeDescription;
+                                dispatchTakePictureIntent();
+
+                                return true;
+
+                            case "Add Ingredients":
+
+                                imageToList = true;
+                                takingPicture = false;
+                                dispatchTakePictureIntent();
+
+                                return true;
+
+                            case "Add Instructions":
+
+                                //removes hardcoded text from text view
+                                if(!instructionsChanged){
+                                    recipeInstructions.setText("");
+                                    instructionsChanged = true;
+                                }
+
+                                imageToTextEditText = recipeInstructions;
+                                takingPicture = false;
+                                dispatchTakePictureIntent();
+
+                                return true;
+
+                            default:
+
+                                return false;
+
+
+
+                        }
+
+                    }
+                });
+                menuInflater.inflate(R.menu.camera_menu, popupMenu.getMenu());
+                popupMenu.show();
+
+
+            }
+        });
 
 
 
@@ -345,48 +429,51 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
 //            }
 //        });
 
-        descriptionFromImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!descriptionChanged){
-                    recipeDescription.setText("");
-                    descriptionChanged = true;
-                }
 
-                takingPicture = false;
-                imageToTextEditText = recipeDescription;
-                dispatchTakePictureIntent();
-            }
-        });
+        //Camera buttons have been replaced with one button and a popup menu!
 
-        //button to read ingredients and analyze text to make a list of ingredients objects
-        ingredientsListFromImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageToList = true;
-                takingPicture = false;
-                dispatchTakePictureIntent();
-            }
-        });
-
-        //Button to read instructions from an image taken with the camera
-        instructionsFromImage.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-
-                //removes hardcoded text from text view
-                if(!instructionsChanged){
-                    recipeInstructions.setText("");
-                    instructionsChanged = true;
-                }
-
-                imageToTextEditText = recipeInstructions;
-                takingPicture = false;
-                dispatchTakePictureIntent();
-                //open camera and do stuff with image
-            }
-        });
+//        descriptionFromImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(!descriptionChanged){
+//                    recipeDescription.setText("");
+//                    descriptionChanged = true;
+//                }
+//
+//                takingPicture = false;
+//                imageToTextEditText = recipeDescription;
+//                dispatchTakePictureIntent();
+//            }
+//        });
+//
+//        //button to read ingredients and analyze text to make a list of ingredients objects
+//        ingredientsListFromImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                imageToList = true;
+//                takingPicture = false;
+//                dispatchTakePictureIntent();
+//            }
+//        });
+//
+//        //Button to read instructions from an image taken with the camera
+//        instructionsFromImage.setOnClickListener(new View.OnClickListener(){
+//
+//            @Override
+//            public void onClick(View v) {
+//
+//                //removes hardcoded text from text view
+//                if(!instructionsChanged){
+//                    recipeInstructions.setText("");
+//                    instructionsChanged = true;
+//                }
+//
+//                imageToTextEditText = recipeInstructions;
+//                takingPicture = false;
+//                dispatchTakePictureIntent();
+//                //open camera and do stuff with image
+//            }
+//        });
 
         //set recycler view adapter for ingredients list
         //View ingredientsView = inflater.inflate(R.layout.)
@@ -477,6 +564,9 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
         editTextPopup.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                if(titleInput.getText().toString().equals("")){
+                    textView.setText("Canceled...");
+                }
 
             }
         });
@@ -698,6 +788,7 @@ public class AddRecipeFragment extends Fragment implements AddIngredientAdapter.
                         //set returned text as text in text box
                         else {
                             String resultText = result.getText();
+
                             imageToTextEditText.append(resultText);
                         }
 
