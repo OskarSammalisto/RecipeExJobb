@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                         if(!task.isSuccessful()){
                             msg = "unsuccessful";
                         }
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -235,7 +235,9 @@ public class MainActivity extends AppCompatActivity {
                     else {
                         Log.d("load from firestore", "Error getting documents: ", task.getException());
                     }
+                    redrawList();
                 }
+
             });
 
 
@@ -246,14 +248,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ///check for friend requests
-        updateFriendRequestList();
+        //updateFriendRequestList();
 
         updateFriendsList();
 
         checkForSharedRecipes();
 
         //sets listeners for firestore database updates
-       setFirestoreListeners();
+        setFirestoreListeners();
 
         //set up the app toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -272,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
         adapterViewPager = new PagerAdapter(getSupportFragmentManager(), this);
         viewPager.setAdapter(adapterViewPager);
         //refreshRecipeListAdapter();
+
 
 
     }
@@ -345,8 +348,14 @@ public class MainActivity extends AppCompatActivity {
 
                     for(QueryDocumentSnapshot document : task.getResult()){
 
+
+
                         Map request = document.getData();
-                        friendRequestsList.add(request);
+                        if(!friendsList.contains(request)){
+                            friendRequestsList.add(request);
+                            Log.d("friend", "added");
+                        }
+
 
                     }
                 }
@@ -518,7 +527,7 @@ public class MainActivity extends AppCompatActivity {
                                     msg = "unsub failed";
                                 }
                                 Log.d(TAG, msg);
-                                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                             }
                         });
                 FirebaseAuth.getInstance().signOut();
@@ -599,7 +608,7 @@ public class MainActivity extends AppCompatActivity {
 
                         else if(emailExists){
 
-                            
+
                             List<String> tempEmails = new ArrayList<>();
                             for(Map map : friendsList){
                                     tempEmails.add(map.get("email").toString());
@@ -623,7 +632,7 @@ public class MainActivity extends AppCompatActivity {
 
                             collRef.document(mAuth.getCurrentUser().getEmail() + " + " +email).set(friendRequest);
 
-                            sendNotification(email);
+                            sendNotification(email, true);
 
 
                             Toast.makeText(MainActivity.this
@@ -672,11 +681,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void sendNotification(String email){
+    public void sendNotification(String email, boolean friendReq){
         Log.d("Sending", "1");
        String TOPIC = "/topics/" +formatEmailForSub(email);
-       String NOTIFICATION_TITLE = "title";
-       String NOTIFICATION_MESSAGE = "message";
+       String NOTIFICATION_TITLE = friendReq ? "New Friend Request" : "New Shared Recipe";
+       String messagebody = friendReq ? " would like to add you as a friend." : " would like to share recipes with you.";
+       String NOTIFICATION_MESSAGE = mAuth.getCurrentUser().getDisplayName() + messagebody;
 
         JSONObject notification = new JSONObject();
         JSONObject notificationBody = new JSONObject();
@@ -913,10 +923,11 @@ public class MainActivity extends AppCompatActivity {
                 uploadRecipe(recipe, recipe.getRecipestorageID());
 
             }
-            sharedRecipesList.remove(recipe);  //todo get this to work
+            sharedRecipesList.remove(recipe);
         }
 
         deleteSharedRecipes(friendsName);
+        redrawList();
 
     }
 
@@ -974,11 +985,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
-    public boolean unsavedRecipesStatus(){
-        return unsavedSharedRecipes;
-    }
 
     public void openRecipe(Recipe recipe){ //int index
 

@@ -261,7 +261,7 @@ public class DisplayRecipeFragment extends Fragment {
         // /users/{userId}/sharedRecipes/{title}
 
         recipe.setSharedBy(mAuth.getCurrentUser().getDisplayName());
-        ((MainActivity) getActivity()).sendNotification(friend.get("email").toString());
+        ((MainActivity) getActivity()).sendNotification(friend.get("email").toString(), false);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference reference = db.collection("users")

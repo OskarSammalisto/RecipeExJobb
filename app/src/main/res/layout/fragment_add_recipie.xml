@@ -4,13 +4,13 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorAccent">
 
 <RelativeLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorAccent"
     >
 
     <ImageButton
@@ -141,16 +141,16 @@
         android:layout_below="@id/cardViewSetHeatTime"
         android:layout_marginTop="20dp"
         android:text="click to add title"
+        android:textAlignment="center"
         android:layout_centerHorizontal="true" />
 
     <ImageButton
         android:id="@+id/cameraForAll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@id/categorySpinner"
-        android:layout_below="@id/addRecipeTitle"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="20dp"
+        android:layout_below="@id/categorySpinner"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
         android:src="@drawable/round_photo_camera_black_18dp"
         android:background="@null">
 
@@ -181,10 +181,12 @@
         android:id="@+id/addRecipeDescription"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/categorySpinner"
+        android:layout_below="@id/cameraForAll"
         android:layout_marginTop="30dp"
         android:text="click to add description"
-        android:layout_centerHorizontal="true" />
+        android:textAlignment="center"
+        android:layout_centerHorizontal="true"
+        />
 
     <Button
         android:id="@+id/addIngredientButton"
@@ -193,7 +195,8 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/addRecipeDescription"
         android:layout_marginTop="20dp"
-        android:text="add an ingredient">
+        android:text="add an ingredient"
+        android:backgroundTint="@color/colorPrimary">
 
     </Button>
 
@@ -226,6 +229,7 @@
         android:layout_below="@id/addItemRecycleView"
         android:layout_marginTop="30dp"
         android:text="click to add instructions"
+        android:textAlignment="center"
         android:layout_centerHorizontal="true" />
 
 <!--    <ImageButton-->

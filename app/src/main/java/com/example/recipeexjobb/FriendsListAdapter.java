@@ -127,7 +127,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
                             List<Recipe> shared = ((MainActivity) context).getSharedRecipeList();
 
-                            final ArrayAdapter<String> recipeNames = new ArrayAdapter<>(context, android.R.layout.select_dialog_singlechoice);
+                            final ArrayAdapter<String> recipeNames = new ArrayAdapter<>(context, android.R.layout.select_dialog_item);
                                 for(Recipe recipe : shared){
                                     if(username.equals(recipe.getSharedBy())){
                                         recipeNames.add(recipe.getRecipeTitle());

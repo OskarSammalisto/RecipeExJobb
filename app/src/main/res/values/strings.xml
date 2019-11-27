@@ -46,11 +46,11 @@
 
 
     <string name="app_name">RecipeExJobb</string>
-    <string name="email">email</string>
-    <string name="password">password</string>
+    <string name="email">Email…</string>
+    <string name="password">password…</string>
     <string name="login">Login</string>
     <string name="sign_up">Sign Up</string>
     <string name="search_hint">Search Recipes</string>
     <string name="app_label">Recipe App</string>
-    <string name="username">username</string>
+    <string name="username">Username…</string>
 </resources>

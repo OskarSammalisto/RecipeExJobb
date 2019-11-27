@@ -1,5 +1,6 @@
 package com.example.recipeexjobb;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -7,12 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,7 +32,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private String channelId = mAuth.getUid();
+    private String channelId = "notificationChannel";
 
 
     @Override
@@ -41,6 +44,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
+
+        FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getCurrentUser().getEmail());
         sendRegistrationToServer(token);
     }
 
@@ -59,6 +64,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         final Intent intent = new Intent(this, MainActivity.class);
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         int notificationID = new Random().nextInt(3000);
+
+
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            setupChannels(notificationManager);
+        }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -91,4 +102,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void setupChannels(NotificationManager notificationManager){
+        CharSequence adminChannelName = "New notification";
+        String adminChannelDescription = "Device to devie notification";
+
+        NotificationChannel adminChannel;
+        adminChannel = new NotificationChannel(channelId, adminChannelName, NotificationManager.IMPORTANCE_HIGH);
+        adminChannel.setDescription(adminChannelDescription);
+        adminChannel.enableLights(true);
+        adminChannel.setLightColor(Color.RED);
+        adminChannel.enableVibration(true);
+        if (notificationManager != null) {
+            notificationManager.createNotificationChannel(adminChannel);
+        }
+    }
+
 }
