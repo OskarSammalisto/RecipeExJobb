@@ -599,7 +599,18 @@ public class MainActivity extends AppCompatActivity {
 
                         else if(emailExists){
 
-                            //TODO: check if users are already friends.
+                            
+                            List<String> tempEmails = new ArrayList<>();
+                            for(Map map : friendsList){
+                                    tempEmails.add(map.get("email").toString());
+                            }
+
+                            if(tempEmails.contains(email)){
+                                Toast.makeText(MainActivity.this, "You're already friends", Toast.LENGTH_LONG).show();
+                            }
+
+                            else {
+
                             //send friend request in firestore
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
                             CollectionReference collRef = db.collection("friends")
@@ -618,6 +629,8 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this
                                     , "Friend Request Sent."
                                     , Toast.LENGTH_SHORT).show();
+
+                            }
 
                         }
                         else {
