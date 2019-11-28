@@ -228,7 +228,8 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.My
 
         }
         catch (Exception e){
-            //TODO: set some other placeholder image instead.
+
+            holder.recipeImage.setImageDrawable(context.getResources().getDrawable(R.drawable.food_default_image));
         }
 
 

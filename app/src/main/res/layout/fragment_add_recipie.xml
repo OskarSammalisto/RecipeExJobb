@@ -4,13 +4,13 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorAccent">
+    android:background="#f5f5f5">
 
 <RelativeLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorAccent"
+    android:background="#f5f5f5"
     >
 
     <ImageButton
@@ -196,7 +196,7 @@
         android:layout_below="@id/addRecipeDescription"
         android:layout_marginTop="20dp"
         android:text="add an ingredient"
-        android:backgroundTint="@color/colorPrimary">
+        android:backgroundTint="@color/other">
 
     </Button>
 

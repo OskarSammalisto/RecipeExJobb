@@ -89,7 +89,7 @@ public class CategoryFragment extends Fragment implements RecipeListAdapter.Even
 
     public void refreshList(){
 
-        recipeListAdapter.notifyDataSetChanged(); //TODO: run this when recipe list is updated
+        recipeListAdapter.notifyDataSetChanged();
         Log.d("refresh", "refreshed: " +page);
     }
 
