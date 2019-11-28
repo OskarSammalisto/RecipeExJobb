@@ -70,7 +70,7 @@ public class DisplayRecipeFragment extends Fragment {
         ScrollView backgroundView = view.findViewById(R.id.displayRecipeScrollView);
         int[] backgroundColors = getActivity().getResources().getIntArray(R.array.categoryColors);
 
-        backgroundView.setBackgroundColor(backgroundColors[recipe.getRecipeCategory()]);
+       // backgroundView.setBackgroundColor(backgroundColors[recipe.getRecipeCategory()]);
 
         //exit button
         ImageButton shareButton = view.findViewById(R.id.shareRecipe);
@@ -133,7 +133,7 @@ public class DisplayRecipeFragment extends Fragment {
             image.setImageURI(Uri.parse(recipe.getImageUri()));
         }
         catch (Exception e){
-            //TODO: set some other placeholder image instead.
+            image.setImageDrawable(getResources().getDrawable(R.drawable.food_default_image));
         }
 
 
@@ -218,7 +218,7 @@ public class DisplayRecipeFragment extends Fragment {
         shareRecipeAlert.setView(recyclerView);
 
 
-        shareRecipeAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        shareRecipeAlert.setPositiveButton("Share", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                     List<Integer> shareList = friendsListAdapter.getFriendsToShareWith();
@@ -243,7 +243,7 @@ public class DisplayRecipeFragment extends Fragment {
             }
         });
 
-        shareRecipeAlert.setNegativeButton("No!", new DialogInterface.OnClickListener() {
+        shareRecipeAlert.setNegativeButton("Cancel!", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 

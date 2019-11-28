@@ -557,6 +557,7 @@ public class MainActivity extends AppCompatActivity {
     private void openCreateRecipeFragment(){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.frameLayoutForRecipes, new AddRecipeFragment());
+        //ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         ft.commit();
         newRecipeButton.setVisible(false);
 
